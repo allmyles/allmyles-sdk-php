@@ -53,6 +53,13 @@ class Client
 
         return $response;
     }
+
+    public function searchLocations($parameters, $session = null)
+    {
+        $context = new Context($this, ($session ? $session : uniqid()));
+        $response = $this->connector->get('masterdata/search', $context, $parameters);
+        return $response;
+    }
 }
 
 class Context
