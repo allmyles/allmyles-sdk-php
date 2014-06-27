@@ -1,0 +1,13 @@
+{
+    "name": "allmyles/allmyles-sdk-php",
+    "description": "Allmyles travel services API SDK, PHP library",
+    "keywords": ["allmyles", "travel", "api", "restful"],
+    "homepage": "https://github.com/allmyles/allmyles-sdk-php",
+    "license": "Apache-2.0",
+    "require": {
+        "guzzlehttp/guzzle": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {"Allmyles\\": "src/"}
+    }
+}
