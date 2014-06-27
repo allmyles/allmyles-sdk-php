@@ -9,7 +9,7 @@ class FlightResult
     public $totalFare;
     public $combinations;
 
-    public function __construct($result, $context)
+    public function __construct($result, &$context)
     {
         $this->breakdown = $result['breakdown'];
         $this->currency = $result['currency'];
@@ -26,7 +26,7 @@ class FlightResult
 
 class Combination
 {
-    protected $context;
+    public $context;
     public $bookingId;
     public $providerType;
     public $firstLeg;
@@ -46,7 +46,6 @@ class Combination
 
     public function getDetails()
     {
-        var_dump($this->context);
         $flightDetails = $this->context->client->getFlightDetails(
             $this->bookingId, $this->context->session
         );

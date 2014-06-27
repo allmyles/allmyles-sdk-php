@@ -5,6 +5,8 @@ require 'Connector.php';
 require 'Flights.php';
 // require 'Masterdata.php';
 
+define('SDK_VERSION', 'allmyles-sdk-php v1.0.0-dev');
+
 class Client
 {
     protected $connector;
@@ -28,41 +30,20 @@ class Client
             };
         };
 
-        $flights = json_decode($response->data, true)['flightResultSet'];
+        $response->setPostProcessor(function($data) use (&$context) {
+            $flights = $data['flightResultSet'];
 
-        $result = Array();
+            $result = Array();
 
-        foreach ($flights as $flight) {
-            $instance = new Flights\FlightResult($flight, $context);
-            array_push($result, $instance);
-        };
-
-        return $result;
-    }
-
-    public function searchLocations($params, $session = null)
-    {
-        $context = new Context($this, ($session ? $session : uniqid()));
-
-        $response = $this->connector->get('masterdata/search', $context, $params);
-
-        if (!$async && $response->incomplete) {
-            while ($response->incomplete) {
-                sleep(5);
-                $response = $response->retry();
+            foreach ($flights as $flight) {
+                $instance = new Flights\FlightResult($flight, $context);
+                array_push($result, $instance);
             };
-        };
 
-        $flights = json_decode($response->data, true)['flightResultSet'];
+            return $result;
+        });
 
-        $result = Array();
-
-        foreach ($flights as $flight) {
-            $instance = new Flights\FlightResult($flight, $context);
-            array_push($result, $instance);
-        };
-
-        return $result;
+        return $response;
     }
 
     public function getFlightDetails($bookingId, $session = null) {
@@ -70,7 +51,7 @@ class Client
 
         $response = $this->connector->get('flights/' . $bookingId, $context);
 
-        return json_decode($response->data, true)['flightDetails'];
+        return $response;
     }
 }
 

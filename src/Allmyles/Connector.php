@@ -7,8 +7,6 @@ class ServiceConnector
 {
     protected $curl;
     protected $authKey;
-    protected $retryDelay = 5;  // in seconds
-    protected $maxRetryCount = 10;
 
     public function __construct($baseUrl, $authKey)
     {

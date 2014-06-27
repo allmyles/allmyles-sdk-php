@@ -64,7 +64,7 @@ class Request
         }
     }
 
-    public function send()
+    public function send($postProcessor = null)
     {
         $allmylesResponse = curl_exec($this->allmylesRequest);
         if (!$allmylesResponse) {
@@ -75,6 +75,10 @@ class Request
 
         if (!$response->incomplete) {
             $this->close();
+        }
+
+        if ($postProcessor) {
+            $response->setPostProcessor($postProcessor);
         }
 
         return $response;
@@ -102,11 +106,14 @@ class Response
     public $headers;
     public $incomplete;
     public $data;
+    public $postProcessor;
     private $request;
 
-    public function __construct($allmylesResponse, $request = null, $error = false, $debug = false) {
+    public function __construct($allmylesResponse, $request = null, $error = false, $debug = false)
+    {
         $this->request = $request;
         $this->headers = array();
+        $this->postProcessor = function ($x) {return $x;};
 
         list($split, $this->data) = explode("\r\n\r\n", $allmylesResponse, 2);
         $split = preg_split("/\r\n|\n|\r/", $split);
@@ -190,10 +197,30 @@ class Response
         $this->incomplete = $this->statusCode == 202;
     }
 
-    public function retry()
+    public function setPostProcessor($func)
     {
-        return $this->request->send();
+        $this->postProcessor = $func;
     }
+
+    public function retry($sleepTime = 0)
+    {
+        sleep($sleepTime);
+        return $this->request->send($this->postProcessor);
+    }
+
+    public function get()
+    {
+        if (is_string($this->data)) {
+            $this->data = json_decode($this->data, true);
+        };
+
+        if (!$this->incomplete) {
+            $this->data = call_user_func($this->postProcessor, $this->data);
+        };
+
+        return $this->data;
+    }
+
 }
 
 class Curl
@@ -207,14 +234,15 @@ class Curl
         $this->debug = false;
     }
 
-    public function request($endpoint, $headers, $method = 'GET', $data = null) {
+    public function request($endpoint, $headers, $method = 'GET', $data = null)
+    {
         if ($this->debug) {
             print("==== DATA =====\n");
             print $data;
             print("\n==== END OF DATA =====\n");
         }
 
-        $fullUrl = $this->baseUrl.'/'.$endpoint;
+        $fullUrl = $this->baseUrl . '/' . $endpoint;
 
         $request = new Request($fullUrl, $method, $data, $headers);
         $response = $request->send();
