@@ -5,7 +5,7 @@ require 'Connector.php';
 require 'Flights.php';
 // require 'Masterdata.php';
 
-define('SDK_VERSION', 'allmyles-sdk-php v1.0.0-dev');
+define('ALLMYLES_VERSION', 'allmyles-sdk-php v1.0.0-dev');
 
 class Client
 {
