@@ -52,21 +52,58 @@ class Client
         $response = $this->connector->get('flights/' . $bookingId, $context);
 
         $response->setPostProcessor(function($data) use (&$context) {
-            $details = $data['flightDetails'];
-            return $details;
+            $results = $data['flightDetails'];
+            return $results;
         });
 
         return $response;
     }
 
-    public function searchLocations($parameters, $session = null)
+    public function bookFlight($parameters, $session = null) {
+        $context = new Context($this, ($session ? $session : uniqid()));
+
+        $data = json_encode($parameters);
+        $response = $this->connector->post('books', $context, $data);
+
+        return $response;
+    }
+
+    public function addPayuPayment($payuId, $session = null) {
+        $context = new Context($this, ($session ? $session : uniqid()));
+
+        $data = json_encode($parameters);
+        $response = $this->connector->post('payment', $context);
+
+        $response->setPostProcessor(function($data) use (&$context) {
+            $result = true;
+        return $result;
+        });
+
+        return $response;
+    }
+
+    public function createFlightTicket($bookingId, $session = null) {
+        $context = new Context($this, ($session ? $session : uniqid()));
+
+        $data = json_encode($parameters);
+        $response = $this->connector->get('tickets/' . $bookingId, $context);
+
+        $response->setPostProcessor(function($data) use (&$context) {
+            $results = $data['tickets'];
+            return $results;
+        });
+
+        return $response;
+    }
+
+    public function searchLocations($bookingId, $session = null)
     {
         $context = new Context($this, ($session ? $session : uniqid()));
         $response = $this->connector->get('masterdata/search', $context, $parameters);
 
         $response->setPostProcessor(function($data) use (&$context) {
-            $details = $data['locationSearchResult'];
-            return $details;
+            $results = $data['locationSearchResult'];
+            return $results;
         });
 
         return $response;

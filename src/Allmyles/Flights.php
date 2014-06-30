@@ -51,4 +51,29 @@ class Combination
         );
         return $flightDetails;
     }
+
+    public function book($parameters)
+    {
+        $parameters['bookingId'] = $this->bookingId;
+        $bookResponse = $this->context->client->bookFlight(
+            $parameters, $this->context->session
+        );
+        return $bookResponse;
+    }
+
+    public function addPayuPayment($payuId)
+    {
+        $paymentResponse = $this->context->client->addPayuPayment(
+            $payuId, $this->context->session
+        );
+        return $paymentResponse;
+    }
+
+    public function createTicket()
+    {
+        $ticketingResponse = $this->context->client->createFlightTicket(
+            $this->bookingId, $this->context->session
+        );
+        return $ticketingResponse;
+    }
 }

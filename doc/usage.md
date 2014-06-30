@@ -57,12 +57,88 @@ var_dump($flights->get());
 
 ## Details
 
-```php
-// Successful search response assumed to be saved in $flights
+Above steps assumed to have been completed.
 
+```php
 $flight = reset($flights->get()[0]->combinations);
 
 var_dump($flight->getDetails()->get());
+```
+
+## Booking
+
+Above steps assumed to have been completed.
+
+```php
+$booking_data = Array(
+    "billingInfo" => Array(
+        "address" => Array(
+            "addressLine1" => "Váci út 13-14",
+            "cityName" => "Budapest",
+            "countryCode" => "HU",
+            "zipCode" => "1234"
+        ),
+        "email" => "ccc@gmail.com",
+        "name" => "Kovacs Gyula",
+        "phone" => Array(
+            "areaCode" => 30,
+            "countryCode" => 36,
+            "phoneNumber" => 1234567
+        )
+    ),
+    "contactInfo" => Array(
+        "address" => Array(
+            "addressLine1" => "Váci út 13-14",
+            "cityName" => "Budapest",
+            "countryCode" => "HU"
+        ),
+        "email" => "bbb@gmail.com",
+        "name" => "Kovacs Lajos",
+        "phone" => Array(
+            "areaCode" => 30,
+            "countryCode" => 36,
+            "phoneNumber" => 1234567
+        )
+    ),
+    "passengers" => [
+        Array(
+            "baggage" => 0,
+            "birthDate" => "1974-04-03",
+            "document" => Array(
+                "dateOfExpiry" => "2016-09-03",
+                "id" => "12345678",
+                "issueCountry" => "HU",
+                "type" => "Passport"
+            ),
+            "email" => "aaa@gmail.com",
+            "firstName" => "Janos",
+            "gender" => "MALE",
+            "lastName" => "Kovacs",
+            "namePrefix" => "Mr",
+            "passengerTypeCode" => "ADT"
+        )
+    ]
+);
+
+var_dump($flight->book($booking_data)->get());
+```
+
+## Payment
+
+Above steps assumed to have been completed.
+
+Returns `true` if successful.
+
+```php
+var_dump($flight->addPayuPayment('1234')->get());
+```
+
+## Ticketing
+
+Above steps assumed to have been completed.
+
+```php
+var_dump($flight->createTicket()->get());
 ```
 
 # Masterdata
