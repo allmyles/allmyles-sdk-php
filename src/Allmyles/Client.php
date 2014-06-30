@@ -63,6 +63,12 @@ class Client
     {
         $context = new Context($this, ($session ? $session : uniqid()));
         $response = $this->connector->get('masterdata/search', $context, $parameters);
+
+        $response->setPostProcessor(function($data) use (&$context) {
+            $details = $data['locationSearchResult'];
+            return $details;
+        });
+
         return $response;
     }
 }
