@@ -51,6 +51,11 @@ class Client
 
         $response = $this->connector->get('flights/' . $bookingId, $context);
 
+        $response->setPostProcessor(function($data) use (&$context) {
+            $details = $data['flightDetails'];
+            return $details;
+        });
+
         return $response;
     }
 
