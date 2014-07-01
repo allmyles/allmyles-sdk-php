@@ -40,7 +40,6 @@ class Request
         }
 
         if ($uri['scheme'] == 'https') {
-            echo 'Warning: SSL verification disabled';
             curl_setopt($this->allmylesRequest, CURLOPT_SSL_VERIFYHOST, FALSE);
             curl_setopt($this->allmylesRequest, CURLOPT_SSL_VERIFYPEER, FALSE);
         }
