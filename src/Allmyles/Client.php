@@ -71,8 +71,8 @@ class Client
     public function addPayuPayment($payuId, $session = null) {
         $context = new Context($this, ($session ? $session : uniqid()));
 
-        $data = json_encode($parameters);
-        $response = $this->connector->post('payment', $context);
+        $data = json_encode(Array('payuId' => $payuId));
+        $response = $this->connector->post('payment', $context, $data);
 
         $response->setPostProcessor(function($data) use (&$context) {
             $result = true;
@@ -89,7 +89,12 @@ class Client
         $response = $this->connector->get('tickets/' . $bookingId, $context);
 
         $response->setPostProcessor(function($data) use (&$context) {
-            $results = $data['tickets'];
+            if (array_key_exists('tickets', $data)) {
+                $results = $data['tickets'];
+            } else {
+                $results = $data;
+            };
+
             return $results;
         });
 
