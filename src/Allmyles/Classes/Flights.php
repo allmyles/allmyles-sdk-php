@@ -43,8 +43,8 @@ class Combination
         $this->bookingId = $combination['bookingId'];
         $this->providerType = $combination['providerType'];
         $this->legs = [
-            $this->createLeg($combination['firstLeg']),
-            $this->createLeg($combination['returnLeg'])
+            $this->createLeg($combination, 'firstLeg'),
+            $this->createLeg($combination, 'returnLeg')
         ];
         $this->serviceFee = new \Allmyles\Common\Price(
             Array(
@@ -54,12 +54,12 @@ class Combination
         );
     }
 
-    private function createLeg($leg)
+    private function createLeg($combination, $leg)
     {
-        if (!$leg) {
+        if (!array_key_exists($leg, $combination)) {
             return null;
         } else {
-            return new Leg($leg, $this);
+            return new Leg($combination[$leg], $this);
         };
     }
 
