@@ -12,6 +12,7 @@ class Request
 
     public function __construct($fullUrl, $method, $data, $headers, $debug = false)
     {
+
         $uri = parse_url($fullUrl);
 
         if ($uri == false) {
@@ -28,6 +29,8 @@ class Request
         curl_setopt($this->allmylesRequest, CURLOPT_URL, $fullUrl);
         curl_setopt($this->allmylesRequest, CURLOPT_HEADER, 1);
         curl_setopt($this->allmylesRequest, CURLOPT_VERBOSE, (int)$this->debug);
+
+        $headers['User-Agent'] = ALLMYLES_VERSION;
 
         $curl_header = array();
         foreach ($headers as $k=>$v) {
