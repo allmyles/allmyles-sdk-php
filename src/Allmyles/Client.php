@@ -54,6 +54,9 @@ class Client
 
         $response->setPostProcessor(function($data) use (&$context) {
             $results = $data['flightDetails'];
+            $results['surcharge'] = new Common\Price($results['surcharge']);
+            $results['price'] = new Common\Price($results['price']);
+            $results['result'] = new FlightS\FlightResult($results['result'], $context);
             return $results;
         });
 
