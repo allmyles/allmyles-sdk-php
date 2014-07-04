@@ -213,14 +213,14 @@ class Response
     public function get()
     {
         if (is_string($this->data)) {
-            $this->data = json_decode($this->data, true);
+            $data = json_decode($this->data, true);
+        } else {
+            $data = $this->data;
         };
 
         if (!$this->incomplete) {
-            $this->data = call_user_func($this->postProcessor, $this->data);
+            return call_user_func($this->postProcessor, $data);
         };
-
-        return $this->data;
     }
 
 }
