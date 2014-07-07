@@ -1,12 +1,12 @@
 <?php
 namespace Allmyles\Flights;
 
-define('FLIGHT_PROVIDER_ALL', 'All');
-define('FLIGHT_PROVIDER_TRADITIONAL', 'OnlyTraditional');
-define('FLIGHT_PROVIDER_LOWCOST', 'OnlyLowCost');
-
 class SearchQuery
 {
+    const PROVIDER_ALL = 'All';
+    const PROVIDER_TRADITIONAL = 'OnlyTraditional';
+    const PROVIDER_LOWCOST = 'OnlyLowCost';
+
     private $fromLocation;
     private $toLocation;
     private $departureDate;
