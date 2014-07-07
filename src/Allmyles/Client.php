@@ -21,7 +21,12 @@ class Client
     {
         $context = new Context($this, ($session ? $session : uniqid()));
 
-        $data = json_encode($parameters);
+        if (is_array($parameters)) {
+            $data = json_encode($parameters);
+        } else {
+            $data = json_encode($parameters->getData());
+        }
+
         $response = $this->connector->post('flights', $context, $data);
 
         if (!$async && $response->incomplete) {

@@ -1,6 +1,98 @@
 <?php
 namespace Allmyles\Flights;
 
+define('FLIGHT_PROVIDER_ALL', 'All');
+define('FLIGHT_PROVIDER_TRADITIONAL', 'OnlyTraditional');
+define('FLIGHT_PROVIDER_LOWCOST', 'OnlyLowCost');
+
+class SearchQuery
+{
+    private $fromLocation;
+    private $toLocation;
+    private $departureDate;
+    private $returnDate;
+    private $passengers;
+    private $providerType;
+    private $preferredAirlines;
+
+    public function __construct(
+        $fromLocation,
+        $toLocation,
+        $departureDate,
+        $returnDate = null
+    ) {
+        $this->fromLocation = $fromLocation;
+        $this->toLocation = $toLocation;
+        $this->departureDate = $this->getTimestamp($departureDate);
+        $this->returnDate = $this->getTimestamp($returnDate);
+        $this->passengers = Array();
+        $this->providerType = null;
+        $this->preferredAirlines = null;
+    }
+
+    public function addProviderFilter($providerType)
+    {
+        $this->providerType = $providerType;
+    }
+
+    public function addAirlineFilter($airlines)
+    {
+        if ($this->preferredAirlines == null) {
+          $this->preferredAirlines = array();
+        }
+
+        if (is_array($airlines)) {
+            foreach ($airlines as $airline) {
+                array_push($this->preferredAirlines, $airline);
+            };
+        } else {
+            array_push($this->preferredAirlines, $airlines);
+        };
+    }
+
+    public function addPassengers($adt, $chd = 0, $inf = 0)
+    {
+        $this->passengers['ADT'] = $adt;
+        $this->passengers['CHD'] = $chd;
+        $this->passengers['INF'] = $inf;
+    }
+
+    public function getData()
+    {
+        $data = Array();
+        $data['fromLocation'] = $this->fromLocation;
+        $data['toLocation'] = $this->toLocation;
+        $data['departureDate'] = $this->departureDate;
+        if ($this->returnDate != null) {
+            $data['returnDate'] = $this->returnDate;
+        };
+        $data['persons'] = Array();
+        foreach ($this->passengers as $type => $quantity) {
+            array_push(
+                $data['persons'],
+                Array('passengerType' => $type, 'quantity' => $quantity)
+            );
+        };
+        if ($this->providerType != null) {
+            $data['providerType'] = $this->providerType;
+        };
+        if ($this->preferredAirlines != null) {
+            $data['preferredAirlines'] = $this->preferredAirlines;
+        };
+
+        return $data;
+    }
+
+    private function getTimestamp($datetime)
+    {
+        if (is_string($datetime) || $datetime == null) {
+            return $datetime;
+        } else {
+            return $datetime->format('c');
+        };
+    }
+}
+
 class FlightResult
 {
     public $context;
