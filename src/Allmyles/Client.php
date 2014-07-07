@@ -96,8 +96,10 @@ class Client
         $response = $this->connector->post('payment', $context, $data);
 
         $response->setPostProcessor(function($data) use (&$context) {
-            $result = true;
-        return $result;
+            // We are expecting no content
+            if ($data == null) {
+                return true;
+            };
         });
 
         return $response;
