@@ -1,9 +1,5 @@
 <?php
 
-require 'Client.php';
-
-$allmyles = new Allmyles\Client('http://localhost:8084/v2.0', 'allmyles-test');
-
 $search_data = Array(
     'fromLocation' => 'BUD',
     'toLocation' => 'LON',
