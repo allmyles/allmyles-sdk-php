@@ -108,7 +108,6 @@ class Client
     public function createFlightTicket($bookingId, $session = null) {
         $context = new Context($this, ($session ? $session : uniqid()));
 
-        $data = json_encode($parameters);
         $response = $this->connector->get('tickets/' . $bookingId, $context);
 
         $response->setPostProcessor(function($data) use (&$context) {
