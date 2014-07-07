@@ -224,7 +224,6 @@ class Segment
     public $airline;
     public $flightNumber;
     public $availableSeats;
-    public $seats;
     public $cabin;
 
     public function __construct($segment, &$leg)
@@ -237,7 +236,6 @@ class Segment
         $this->airline = $segment['operatingAirline'];
         $this->flightNumber = $segment['flightNumber'];
         $this->availableSeats = $segment['availableSeats'];
-        $this->seats = $segment['availableSeats'];
         $this->cabin = $segment['cabin'];
     }
 }
