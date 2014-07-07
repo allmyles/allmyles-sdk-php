@@ -4,11 +4,9 @@ require 'Client.php';
 
 $allmyles = new Allmyles\Client('http://localhost:8084/v2.0', 'allmyles-test');
 
+$timezone = new DateTimeZone('UTC')
 $search_query = new Allmyles\Flights\SearchQuery(
-    'BUD',
-    'LON',
-    new DateTime('tomorrow', new DateTimeZone('UTC')),
-    new DateTime('tomorrow + 7 days', new DateTimeZone('UTC'))
+    'BUD', 'LON', new DateTime('tomorrow', $timezone), new DateTime('tomorrow + 7 days', $timezone)
 );
 $search_query->addPassengers(2, 1, 1); // required
 $search_query->addProviderFilter(FLIGHT_PROVIDER_TRADITIONAL); // optional
