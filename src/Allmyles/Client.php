@@ -71,8 +71,20 @@ class Client
     public function bookFlight($parameters, $session = null) {
         $context = new Context($this, ($session ? $session : uniqid()));
 
-        $data = json_encode($parameters);
+        if (is_array($parameters)) {
+            $data = json_encode($parameters);
+        } else {
+            $data = json_encode($parameters->getData());
+        }
+
         $response = $this->connector->post('books', $context, $data);
+
+        $response->setPostProcessor(function($data) use (&$context) {
+            // We are expecting no content
+            if ($data == null) {
+                return true;
+            };
+        });
 
         return $response;
     }

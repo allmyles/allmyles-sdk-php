@@ -39,7 +39,7 @@ class SearchQuery
     {
         if ($this->preferredAirlines == null) {
           $this->preferredAirlines = array();
-        }
+        };
 
         if (is_array($airlines)) {
             foreach ($airlines as $airline) {
@@ -165,7 +165,11 @@ class Combination
 
     public function book($parameters)
     {
-        $parameters['bookingId'] = $this->bookingId;
+        if (is_array($parameters)) {
+            $parameters['bookingId'] = $this->bookingId;
+        } else {
+            $parameters->setBookingId($this->bookingId);
+        };
         $bookResponse = $this->context->client->bookFlight(
             $parameters, $this->context->session
         );
@@ -254,5 +258,84 @@ class Stop
         $this->time = date_create($stop['dateTime'], new \DateTimeZone('UTC'));
         $this->airport = $stop['airport']['code'];
         $this->terminal = $stop['airport']['terminal'];
+    }
+}
+
+class BookQuery
+{
+    private $bookingId;
+    private $passengers;
+    private $billingInfo;
+    private $contactInfo;
+
+    public function __construct($passengers = null, $contactInfo = null, $billingInfo = null)
+    {
+        if ($passengers != null) {
+            $this->addPassengers($passengers);
+        };
+        if ($contactInfo != null) {
+            $this->addContactInfo($contactInfo);
+        };
+        if ($billingInfo != null) {
+            $this->addBillingInfo($billingInfo);
+        };
+    }
+
+    public function setBookingId($bookingId)
+    {
+        $this->bookingId = $bookingId;
+    }
+
+    public function addPassengers($passengers)
+    {
+        if ($this->passengers == null) {
+          $this->passengers = array();
+        };
+
+        foreach (array_values($passengers) as $value) {
+            // Check if all items in $passengers are arrays. If not, then we
+            // got a single passenger only, and need to wrap it in an array.
+            if (!is_array($value)) {
+                $passengers = Array($passengers);
+                break;
+            }
+        }
+
+        foreach ($passengers as $passenger) {
+            $passenger['baggage'] = 0;
+            switch (strtolower($passenger['namePrefix'])) {
+                case 'mr':
+                    $passenger['gender'] = 'MALE';
+                    break;
+                case 'ms':
+                    $passenger['gender'] = 'FEMALE';
+                    break;
+                case 'mrs':
+                    $passenger['gender'] = 'FEMALE';
+                    break;
+            }
+
+            array_push($this->passengers, $passenger);
+        };
+    }
+
+    public function addContactInfo($address)
+    {
+        $this->contactInfo = $address;
+    }
+
+    public function addBillingInfo($address)
+    {
+        $this->billingInfo = $address;
+    }
+
+    public function getData()
+    {
+        $data = Array();
+        $data['passengers'] = $this->passengers;
+        $data['billingInfo'] = $this->billingInfo;
+        $data['contactInfo'] = $this->contactInfo;
+        $data['bookingId'] = $this->bookingId;
+        return $data;
     }
 }
