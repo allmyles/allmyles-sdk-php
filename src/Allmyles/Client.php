@@ -114,6 +114,7 @@ class Client
             if (array_key_exists('tickets', $data)) {
                 $results = $data['tickets'];
             } else {
+                unset($data['flightData']);
                 $results = $data;
             };
 
