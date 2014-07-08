@@ -80,7 +80,7 @@ class Request
         }
 
         if ($postProcessor) {
-            $response->setPostProcessor($postProcessor);
+            $response->postProcessor = $postProcessor;
         }
 
         return $response;
@@ -203,11 +203,6 @@ class Response
         $this->incomplete = $this->statusCode == 202;
     }
 
-    public function setPostProcessor($func)
-    {
-        $this->postProcessor = $func;
-    }
-
     public function retry($sleepTime = 0)
     {
         sleep($sleepTime);
@@ -227,7 +222,7 @@ class Response
         };
 
         if (!$this->incomplete) {
-            return call_user_func($this->postProcessor, $data);
+            return $this->postProcessor->process($data);
         };
     }
 }

@@ -37,18 +37,7 @@ class Client
             };
         };
 
-        $response->setPostProcessor(function($data) use (&$context) {
-            $flights = $data['flightResultSet'];
-
-            $result = Array();
-
-            foreach ($flights as $flight) {
-                $instance = new Flights\FlightResult($flight, $context);
-                array_push($result, $instance);
-            };
-
-            return $result;
-        });
+        $response->postProcessor = new Common\PostProcessor('searchFlight', $context);
 
         return $response;
     }
@@ -58,13 +47,7 @@ class Client
 
         $response = $this->connector->get('flights/' . $bookingId, $context);
 
-        $response->setPostProcessor(function($data) use (&$context) {
-            $results = $data['flightDetails'];
-            $results['surcharge'] = new Common\Price($results['surcharge']);
-            $results['price'] = new Common\Price($results['price']);
-            unset($results['result']);
-            return $results;
-        });
+        $response->postProcessor = new Common\PostProcessor('getFlightDetails', $context);
 
         return $response;
     }
@@ -80,14 +63,7 @@ class Client
 
         $response = $this->connector->post('books', $context, $data);
 
-        $response->setPostProcessor(function($data) use (&$context) {
-            // We are expecting no content when flight is LCC
-            if ($data == null) {
-                return true;
-            } else {
-                return $data;
-            };
-        });
+        $response->postProcessor = new Common\PostProcessor('bookFlight', $context);
 
         return $response;
     }
@@ -98,12 +74,7 @@ class Client
         $data = json_encode(Array('payuId' => $payuId));
         $response = $this->connector->post('payment', $context, $data);
 
-        $response->setPostProcessor(function($data) use (&$context) {
-            // We are expecting no content
-            if ($data == null) {
-                return true;
-            };
-        });
+        $response->postProcessor = new Common\PostProcessor('addPayuPayment', $context);
 
         return $response;
     }
@@ -113,16 +84,7 @@ class Client
 
         $response = $this->connector->get('tickets/' . $bookingId, $context);
 
-        $response->setPostProcessor(function($data) use (&$context) {
-            if (array_key_exists('tickets', $data)) {
-                $results = $data['tickets'];
-            } else {
-                unset($data['flightData']);
-                $results = $data;
-            };
-
-            return $results;
-        });
+        $response->postProcessor = new Common\PostProcessor('createFlightTicket', $context);
 
         return $response;
     }
@@ -132,10 +94,7 @@ class Client
         $context = new Context($this, ($session ? $session : uniqid()));
         $response = $this->connector->get('masterdata/search', $context, $parameters);
 
-        $response->setPostProcessor(function($data) use (&$context) {
-            $results = $data['locationSearchResult'];
-            return $results;
-        });
+        $response->postProcessor = new Common\PostProcessor('searchLocations', $context);
 
         return $response;
     }
