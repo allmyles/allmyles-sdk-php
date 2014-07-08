@@ -193,7 +193,11 @@ class Response
             case 307: // Moved temporarily
                 break;
             default:
-                $this->error = $status_message;
+                if (isset($this->data)) {
+                    $this->error = $this->data;
+                } else {
+                    $this->error = $responses[$this->statusCode];
+                };
         }
 
         $this->incomplete = $this->statusCode == 202;
@@ -212,6 +216,10 @@ class Response
 
     public function get()
     {
+        if (isset($this->error)) {
+            throw new \Allmyles\Exceptions\ServiceException($this->error, $this->statusCode);
+        };
+
         if (is_string($this->data)) {
             $data = json_decode($this->data, true);
         } else {
@@ -222,7 +230,6 @@ class Response
             return call_user_func($this->postProcessor, $data);
         };
     }
-
 }
 
 class Curl

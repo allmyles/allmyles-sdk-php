@@ -3,6 +3,7 @@ namespace Allmyles;
 
 require 'Connector.php';
 require 'Classes/Common.php';
+require 'Classes/Exceptions.php';
 require 'Classes/Flights.php';
 require 'Classes/Masterdata.php';
 
