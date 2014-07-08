@@ -134,10 +134,10 @@ class Combination
 
         $this->bookingId = $combination['bookingId'];
         $this->providerType = $combination['providerType'];
-        $this->legs = [
+        $this->legs = Array(
             $this->createLeg($combination, 'firstLeg'),
             $this->createLeg($combination, 'returnLeg')
-        ];
+        );
         $this->serviceFee = new \Allmyles\Common\Price(
             Array(
                 'amount' => $combination['serviceFeeAmount'],
