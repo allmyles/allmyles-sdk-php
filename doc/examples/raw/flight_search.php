@@ -7,5 +7,5 @@ $search_data = Array(
     'persons' => [Array('passengerType' => 'ADT', 'quantity' => 1)]
 );
 
-$flights = $allmyles->searchFlight($search_data, false);
-var_dump($flights->get());
+$flights = $allmyles->searchFlight($search_data, false)->get();
+var_dump($flights);

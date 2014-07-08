@@ -1,4 +1,4 @@
 <?php
 
-$flight = reset($flights->get()[1]->combinations);
+$flight = reset($flights[0]->combinations);
 var_dump($flight->getDetails()->get());

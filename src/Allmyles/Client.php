@@ -7,7 +7,7 @@ require 'Classes/Exceptions.php';
 require 'Classes/Flights.php';
 require 'Classes/Masterdata.php';
 
-define('ALLMYLES_VERSION', 'allmyles-sdk-php v1.0.0');
+define('ALLMYLES_VERSION', 'allmyles-sdk-php v1.0.1');
 
 class Client
 {
@@ -81,9 +81,11 @@ class Client
         $response = $this->connector->post('books', $context, $data);
 
         $response->setPostProcessor(function($data) use (&$context) {
-            // We are expecting no content
+            // We are expecting no content when flight is LCC
             if ($data == null) {
                 return true;
+            } else {
+                return $data;
             };
         });
 

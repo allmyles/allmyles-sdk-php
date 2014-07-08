@@ -14,4 +14,6 @@ $flights = $allmyles->searchFlight($search_query);
 
 while ($flights->incomplete) {$flights = $flights->retry(5);};
 
-var_dump($flights->get());
+$flights = $flights->get();
+
+var_dump($flights);
