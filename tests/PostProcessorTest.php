@@ -1,7 +1,7 @@
 <?php
 namespace Allmyles;
 
-class PostProcessorTest extends \PHPUnit_Framework_TestCase
+class SearchPostProcessorTest extends \PHPUnit_Framework_TestCase
 {
     protected $context;
     protected $flightSearchResponse;

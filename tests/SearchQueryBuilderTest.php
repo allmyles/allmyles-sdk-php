@@ -1,7 +1,7 @@
 <?php
 namespace Allmyles;
 
-class QueryBuilderTest extends \PHPUnit_Framework_TestCase
+class SearchQueryBuilderTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
@@ -132,6 +132,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($query::PROVIDER_ALL);
     }
 
+
     public function testSearchQueryMultipleFilters()
     {
         $query = new Flights\SearchQuery('BUD', 'LON', '2014-12-24T00:00:00Z');
@@ -170,5 +171,4 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
             )
         );
     }
-
 }
