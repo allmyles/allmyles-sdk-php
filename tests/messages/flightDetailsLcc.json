@@ -1,0 +1,126 @@
+{
+  "flightDetails": {
+    "baggageTiers": [
+      {
+        "max_quantity": 0,
+        "max_weight": 0.0,
+        "price": {
+          "amount": 0.0,
+          "currency": null
+        },
+        "tier": "0"
+      },
+      {
+        "max_quantity": 1,
+        "max_weight": 15.0,
+        "price": {
+          "amount": 54.4,
+          "currency": "EUR"
+        },
+        "tier": "1"
+      }
+    ],
+    "fields": {
+      "field1": {
+        "per_person": true,
+        "required": true
+      },
+      "field2": {
+        "per_person": true,
+        "required": false
+      },
+      "field3": {
+        "per_person": false,
+        "required": true
+      },
+      "field4": {
+        "per_person": false,
+        "required": false
+      }
+    },
+    "options": {
+      "seatSelectionAvailable": false,
+      "travelfusionPrepayAvailable": false
+    },
+    "price": {
+      "amount": 94.9136,
+      "currency": "EUR"
+    },
+    "result": {
+      "breakdown": [
+        {
+          "passengerFare": {
+            "fare": 89.9136,
+            "quantity": 1,
+            "ticketDesignators": [],
+            "type": "ADT"
+          }
+        }
+      ],
+      "combinations": [
+        {
+          "firstLeg": {
+            "elapsedTime": "0235",
+            "flightSegments": [
+              {
+                "arrival": {
+                  "airport": {
+                    "code": "STN",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-24T16:00:00"
+                },
+                "availableSeats": 0,
+                "cabin": null,
+                "departure": {
+                  "airport": {
+                    "code": "BUD",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-24T14:25:00"
+                },
+                "flightNumber": "8446",
+                "operatingAirline": "FR"
+              }
+            ]
+          },
+          "providerType": "TravelFusionProvider",
+          "returnLeg": {
+            "elapsedTime": "0220",
+            "flightSegments": [
+              {
+                "arrival": {
+                  "airport": {
+                    "code": "BUD",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-29T11:50:00"
+                },
+                "availableSeats": 0,
+                "cabin": null,
+                "departure": {
+                  "airport": {
+                    "code": "STN",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-29T08:30:00"
+                },
+                "flightNumber": "8353",
+                "operatingAirline": "FR"
+              }
+            ]
+          },
+          "serviceFeeAmount": 5.0
+        }
+      ],
+      "currency": "EUR",
+      "total_fare": 94.9136
+    },
+    "rulesLink": "http://www.ryanair.com/en/terms-and-conditions",
+    "surcharge": {
+      "amount": "0.000000",
+      "card_type": "CA",
+      "currency": "EUR"
+    }
+  }
+}

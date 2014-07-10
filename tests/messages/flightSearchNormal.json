@@ -1,0 +1,146 @@
+{
+  "flightResultSet": [
+    {
+      "breakdown": [
+        {
+          "passengerFare": {
+            "fare": 89.9136,
+            "quantity": 1,
+            "ticketDesignators": [],
+            "type": "ADT"
+          }
+        }
+      ],
+      "combinations": [
+        {
+          "bookingId": "801_0_0",
+          "firstLeg": {
+            "elapsedTime": "0235",
+            "flightSegments": [
+              {
+                "arrival": {
+                  "airport": {
+                    "code": "STN",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-24T16:00:00"
+                },
+                "availableSeats": 0,
+                "cabin": "economy",
+                "departure": {
+                  "airport": {
+                    "code": "BUD",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-24T14:25:00"
+                },
+                "flightNumber": "8446",
+                "operatingAirline": "FR"
+              }
+            ]
+          },
+          "providerType": "TravelFusionProvider",
+          "returnLeg": {
+            "elapsedTime": "0220",
+            "flightSegments": [
+              {
+                "arrival": {
+                  "airport": {
+                    "code": "BUD",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-29T11:50:00"
+                },
+                "availableSeats": 0,
+                "cabin": "economy",
+                "departure": {
+                  "airport": {
+                    "code": "STN",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-29T08:30:00"
+                },
+                "flightNumber": "8353",
+                "operatingAirline": "FR"
+              }
+            ]
+          },
+          "serviceFeeAmount": 5.0
+        }
+      ],
+      "currency": "EUR",
+      "total_fare": 94.9136
+    },
+    {
+      "breakdown": [
+        {
+          "passengerFare": {
+            "fare": 89.9136,
+            "quantity": 1,
+            "ticketDesignators": [],
+            "type": "ADT"
+          }
+        }
+      ],
+      "combinations": [
+        {
+          "bookingId": "802_1_0",
+          "firstLeg": {
+            "elapsedTime": "0235",
+            "flightSegments": [
+              {
+                "arrival": {
+                  "airport": {
+                    "code": "STN",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-24T16:00:00"
+                },
+                "availableSeats": 0,
+                "cabin": null,
+                "departure": {
+                  "airport": {
+                    "code": "BUD",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-24T14:25:00"
+                },
+                "flightNumber": "8446",
+                "operatingAirline": "FR"
+              }
+            ]
+          },
+          "providerType": "TravelFusionProvider",
+          "returnLeg": {
+            "elapsedTime": "0220",
+            "flightSegments": [
+              {
+                "arrival": {
+                  "airport": {
+                    "code": "BUD",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-29T15:05:00"
+                },
+                "availableSeats": 0,
+                "cabin": null,
+                "departure": {
+                  "airport": {
+                    "code": "STN",
+                    "terminal": null
+                  },
+                  "dateTime": "2014-12-29T11:45:00"
+                },
+                "flightNumber": "8445",
+                "operatingAirline": "FR"
+              }
+            ]
+          },
+          "serviceFeeAmount": 5.0
+        }
+      ],
+      "currency": "EUR",
+      "total_fare": 94.9136
+    }
+  ]
+}
