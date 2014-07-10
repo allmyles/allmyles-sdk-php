@@ -1,7 +1,7 @@
 <?php
 namespace Allmyles;
 
-class SearchPostProcessorTest extends \PHPUnit_Framework_TestCase
+class PostProcessorTest extends \PHPUnit_Framework_TestCase
 {
     protected $context;
     protected $flightSearchResponse;
@@ -26,6 +26,16 @@ class SearchPostProcessorTest extends \PHPUnit_Framework_TestCase
             new Flights\FlightResult($data["flightResultSet"][0], $this->context),
             new Flights\FlightResult($data["flightResultSet"][1], $this->context)
         );
+
+        $this->assertEquals($output, $expected);
+    }
+
+    public function testFlightSearchEmpty()
+    {
+        $data = json_decode(file_get_contents('tests/messages/flightSearchEmpty.json'), true);
+        $processor = new Common\PostProcessor('searchFlight', $this->context);
+        $output = $processor->process($data);
+        $expected = Array();
 
         $this->assertEquals($output, $expected);
     }
@@ -131,12 +141,51 @@ class SearchPostProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($output->time, new \DateTime("2014-12-24T14:25:00"));
     }
 
-    public function testFlightSearchEmpty()
+    public function flightDetailsProvider()
     {
-        $data = json_decode(file_get_contents('tests/messages/flightSearchEmpty.json'), true);
-        $processor = new Common\PostProcessor('searchFlight', $this->context);
+        return Array(
+            Array(
+                json_decode(file_get_contents('tests/messages/flightDetailsLcc.json'), true),
+                Array(
+                    'baggageTiers' => Array(
+                        Array(
+                            'max_quantity' => 0,
+                            'max_weight' => 0.0,
+                            'price' => new Common\Price(Array('amount' => 0.0, 'currency' => null)),
+                            'tier' => '0'
+                        ),
+                        Array(
+                            'max_quantity' => 1,
+                            'max_weight' => 15.0,
+                            'price' => new Common\Price(Array('amount' => 54.4, 'currency' => 'EUR')),
+                            'tier' => '1'
+                        )
+                    ),
+                    'fields' => Array(
+                        'field1' => Array ('per_person' => true, 'required' => true),
+                        'field2' => Array ('per_person' => true, 'required' => false),
+                        'field3' => Array ('per_person' => false, 'required' => true),
+                        'field4' => Array ('per_person' => false, 'required' => false)
+                    ),
+                    'options' => Array(
+                        'seatSelectionAvailable' => false,
+                        'travelfusionPrepayAvailable' => false
+                    ),
+                    'price' => new Common\Price(Array('amount' => 94.9136, 'currency' => 'EUR')),
+                    'rulesLink' => 'http://www.ryanair.com/en/terms-and-conditions',
+                    'surcharge' => new Common\Price(Array('amount' => 0.0, 'currency' => 'EUR'))
+                )
+            )
+        );
+    }
+
+    /**
+     * @dataProvider flightDetailsProvider
+     */
+    public function testFlightDetails($data, $expected)
+    {
+        $processor = new Common\PostProcessor('getFlightDetails', $this->context);
         $output = $processor->process($data);
-        $expected = Array();
 
         $this->assertEquals($output, $expected);
     }
