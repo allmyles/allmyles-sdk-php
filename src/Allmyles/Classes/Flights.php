@@ -21,6 +21,10 @@ class SearchQuery
         $departureDate,
         $returnDate = null
     ) {
+        if (!$this->locationIsValid($fromLocation) ||
+            !$this->locationIsValid($toLocation)) {
+            throw new \Allmyles\Exceptions\ValidationException('Invalid location code given!');
+        };
         $this->fromLocation = $fromLocation;
         $this->toLocation = $toLocation;
         $this->departureDate = $this->getTimestamp($departureDate);
@@ -28,6 +32,10 @@ class SearchQuery
         $this->passengers = Array();
         $this->providerType = null;
         $this->preferredAirlines = null;
+    }
+
+    private function locationIsValid($locationCode) {
+        return true; // TODO
     }
 
     public function addProviderFilter($providerType)
