@@ -33,6 +33,9 @@ class SearchQuery
         $this->passengers = Array();
         $this->providerType = null;
         $this->preferredAirlines = null;
+        $this->passengers['ADT'] = null;
+        $this->passengers['CHD'] = null;
+        $this->passengers['INF'] = null;
     }
 
     private function locationIsValid($locationCode) {
@@ -61,18 +64,22 @@ class SearchQuery
 
         if (is_array($airlines)) {
             foreach ($airlines as $airline) {
-                array_push($this->preferredAirlines, $airline);
+                if (in_array($airline, $this->preferredAirlines) == 0) {
+                    array_push($this->preferredAirlines, $airline);
+                };
             };
         } else {
-            array_push($this->preferredAirlines, $airlines);
+            if (in_array($airlines, $this->preferredAirlines) == 0) {
+                array_push($this->preferredAirlines, $airlines);
+            };
         };
     }
 
     public function addPassengers($adt, $chd = 0, $inf = 0)
     {
-        $this->passengers['ADT'] = $adt;
-        $this->passengers['CHD'] = $chd;
-        $this->passengers['INF'] = $inf;
+        $this->passengers['ADT'] += $adt;
+        $this->passengers['CHD'] += $chd;
+        $this->passengers['INF'] += $inf;
     }
 
     public function getData()
@@ -349,7 +356,11 @@ class BookQuery
     {
         $data = Array();
         $data['passengers'] = $this->passengers;
-        $data['billingInfo'] = $this->billingInfo;
+        if (isset($this->billingInfo)) {
+            $data['billingInfo'] = $this->billingInfo;
+        } else {
+        	$data['billingInfo'] = $this->contactInfo;
+        };
         $data['contactInfo'] = $this->contactInfo;
         $data['bookingId'] = $this->bookingId;
         return $data;
