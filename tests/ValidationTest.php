@@ -56,7 +56,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             Array(1, 1, null),
             Array(1, 1, 1),
             Array(2, 2, 2),
-            Array(6, 0, 0),
+            Array(9, 0, 0),
             Array(3, 0, 3)
         );
     }
@@ -69,11 +69,12 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             Array(1, 0, '1'),
             Array(1, true, null),
             Array(0, 0, 0),
+            Array(0, 1, 0),
             Array(-1, 0, 0),
             Array(0, 1, 1),
-            Array(7, 0, 0), // can't be more than 6 passengers total
-            Array(7, -1, 0),
-            Array(5, 0, 1),
+            Array(10, 0, 0), // can't be more than 6 passengers total
+            Array(10, -1, 0),
+            Array(9, 0, 1),
             Array(1, 0, 2), // must have more adults than infants
             Array(null, null, null)
         );

@@ -77,6 +77,19 @@ class SearchQuery
 
     public function addPassengers($adt, $chd = 0, $inf = 0)
     {
+    	if (is_null($adt)) throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        if (is_null($chd)) $chd = 0;
+        if (is_null($inf)) $inf = 0;
+    	if ((is_int($adt)) and 
+    		(is_int($chd)) and 
+    		(is_int($inf))) {
+    		if (!(($adt>0) and ($chd>=0) and ($inf>=0) and 
+    			($adt>=$inf) and ($adt+$chd+$inf<10))) {
+    			throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+    		};
+        } else {
+        	throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        };
         $this->passengers['ADT'] += $adt;
         $this->passengers['CHD'] += $chd;
         $this->passengers['INF'] += $inf;
