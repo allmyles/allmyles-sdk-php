@@ -338,7 +338,11 @@ class BookQuery
     {
         $data = Array();
         $data['passengers'] = $this->passengers;
-        $data['billingInfo'] = $this->billingInfo;
+        if (isset($this->billingInfo)) {
+            $data['billingInfo'] = $this->billingInfo;
+        } else {
+        	$data['billingInfo'] = $this->contactInfo;
+        };
         $data['contactInfo'] = $this->contactInfo;
         $data['bookingId'] = $this->bookingId;
         return $data;
