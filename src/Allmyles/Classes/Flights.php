@@ -39,7 +39,7 @@ class SearchQuery
     }
 
     private function locationIsValid($locationCode) {
-        $abc = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
+        $abc = '-AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
         if (is_string($locationCode)) {
             if (strlen($locationCode) == 3) {
                 if ((!(strpos($abc, $locationCode[0]) == false)) and
@@ -53,22 +53,37 @@ class SearchQuery
 
     public function addProviderFilter($providerType)
     {
+    	if ((!is_string($providerType))) throw new \Allmyles\Exceptions\ValidationException('Invalid provide filter given!');
         $this->providerType = $providerType;
     }
 
     public function addAirlineFilter($airlines)
     {
+    	$ab0 = '-AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789';
         if ($this->preferredAirlines == null) {
           $this->preferredAirlines = array();
         };
 
+        if ($airlines == array()) throw new \Allmyles\Exceptions\ValidationException('Invalid airline given!');
         if (is_array($airlines)) {
             foreach ($airlines as $airline) {
+            	if (is_string($airline)) {
+            		if ((!(strlen($airline) == 2)) or (strpos($ab0, $airline[0]) == false) or
+                   (strpos($ab0, $airline[1]) == false)) {
+            			throw new \Allmyles\Exceptions\ValidationException('Invalid airline given!');
+            		};
+            	} else throw new \Allmyles\Exceptions\ValidationException('Invalid airline given!');
                 if (in_array($airline, $this->preferredAirlines) == 0) {
                     array_push($this->preferredAirlines, $airline);
                 };
             };
         } else {
+        	if (is_string($airlines)) {
+            		if ((!(strlen($airlines) == 2)) or (strpos($ab0, $airlines[0]) == false) or
+                   (strpos($ab0, $airlines[1]) == false)) {
+            			throw new \Allmyles\Exceptions\ValidationException('Invalid airline given!');
+            		};
+            	} else throw new \Allmyles\Exceptions\ValidationException('Invalid airline given!');
             if (in_array($airlines, $this->preferredAirlines) == 0) {
                 array_push($this->preferredAirlines, $airlines);
             };

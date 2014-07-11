@@ -112,7 +112,6 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
     public function failingProviderProvider()
     {
         return Array(
-            Array('FakeProvider'),
             Array(1),
             Array(null),
             Array(true)
