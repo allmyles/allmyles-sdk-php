@@ -55,9 +55,9 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             Array(1, null, null),
             Array(1, 1, null),
             Array(1, 1, 1),
-            Array(3, 3, 3),
-            Array(9, 0, 0),
-            Array(5, 0, 4)
+            Array(2, 2, 2),
+            Array(6, 0, 0),
+            Array(3, 0, 3)
         );
     }
 
