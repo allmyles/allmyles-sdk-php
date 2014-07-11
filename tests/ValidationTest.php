@@ -48,4 +48,53 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
     {
         new Flights\SearchQuery($from, $to, '2014-12-24T00:00:00Z');
     }
+
+    public function successfulPassengersProvider()
+    {
+        return Array(
+            Array(1, null, null),
+            Array(1, 1, null),
+            Array(1, 1, 1),
+            Array(3, 3, 3),
+            Array(9, 0, 0),
+            Array(5, 0, 4)
+        );
+    }
+
+    public function failingPassengersProvider()
+    {
+        return Array(
+            Array('1', null, null),
+            Array(1.0, null, null),
+            Array(1, 0, '1'),
+            Array(1, true, null),
+            Array(0, 0, 0),
+            Array(-1, 0, 0),
+            Array(0, 1, 1),
+            Array(7, 0, 0), // can't be more than 6 passengers total
+            Array(7, -1, 0),
+            Array(5, 0, 1),
+            Array(1, 0, 2), // must have more adults than infants
+            Array(null, null, null)
+        );
+    }
+
+    /**
+     * @dataProvider successfulPassengersProvider
+     */
+    public function testSuccessfulPassengers($adt, $chd, $inf)
+    {
+        $query = new Flights\SearchQuery('BUD', 'LON', '2014-12-24T00:00:00Z');
+        $query->addPassengers($adt, $chd, $inf);
+    }
+
+    /**
+     * @dataProvider failingPassengersProvider
+     * @expectedException \Allmyles\Exceptions\ValidationException
+     */
+    public function testFailingPassengers($adt, $chd, $inf)
+    {
+        $query = new Flights\SearchQuery('BUD', 'LON', '2014-12-24T00:00:00Z');
+        $query->addPassengers($adt, $chd, $inf);
+    }
 }
