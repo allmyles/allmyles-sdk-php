@@ -98,4 +98,93 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
         $query = new Flights\SearchQuery('BUD', 'LON', '2014-12-24T00:00:00Z');
         $query->addPassengers($adt, $chd, $inf);
     }
+
+    public function successfulProviderProvider() // :D
+    {
+        $query = new Flights\SearchQuery('BUD', 'LON', '2014-12-24T00:00:00Z');
+        return Array(
+            Array($query::PROVIDER_ALL),
+            Array($query::PROVIDER_TRADITIONAL),
+            Array($query::PROVIDER_LOWCOST)
+        );
+    }
+
+    public function failingProviderProvider()
+    {
+        return Array(
+            Array('FakeProvider'),
+            Array(1),
+            Array(null),
+            Array(true)
+        );
+    }
+
+    /**
+     * @dataProvider successfulProviderProvider
+     */
+    public function testSuccessfulProvider($provider)
+    {
+        $query = new Flights\SearchQuery('BUD', 'LON', '2014-12-24T00:00:00Z');
+        $query->addProviderFilter($provider);
+    }
+
+    /**
+     * @dataProvider failingProviderProvider
+     * @expectedException \Allmyles\Exceptions\ValidationException
+     */
+    public function testFailingProvider($provider)
+    {
+        $query = new Flights\SearchQuery('BUD', 'LON', '2014-12-24T00:00:00Z');
+        $query->addProviderFilter($provider);
+    }
+
+    public function successfulAirlinesProvider()
+    {
+        return Array(
+            Array('BA'),
+            Array('ba'),
+            Array('Ba'),
+            Array('W6'),
+            Array(Array('BA')),
+            Array(Array('ba', 'w6')),
+            Array(Array('BA', 'W6'))
+        );
+    }
+
+    public function failingAirlinesProvider()
+    {
+        return Array(
+            Array(null),
+            Array(1),
+            Array(''),
+            Array('B'),
+            Array('BAA'),
+            Array('B-'),
+            Array(Array()),
+            Array(Array('BA', '')),
+            Array(Array('B', 'BA')),
+            Array(Array('BA', 'BAA')),
+            Array(Array('B-', 'BA')),
+            Array(Array('BA', 1))
+        );
+    }
+
+    /**
+     * @dataProvider successfulAirlinesProvider
+     */
+    public function testSuccessfulAirlines($airlines)
+    {
+        $query = new Flights\SearchQuery('BUD', 'LON', '2014-12-24T00:00:00Z');
+        $query->addAirlineFilter($airlines);
+    }
+
+    /**
+     * @dataProvider failingAirlinesProvider
+     * @expectedException \Allmyles\Exceptions\ValidationException
+     */
+    public function testFailingAirlines($airlines)
+    {
+        $query = new Flights\SearchQuery('BUD', 'LON', '2014-12-24T00:00:00Z');
+        $query->addAirlineFilter($airlines);
+    }
 }
