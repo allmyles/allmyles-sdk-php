@@ -22,7 +22,8 @@ class SearchQuery
         $returnDate = null
     ) {
         if (!$this->locationIsValid($fromLocation) ||
-            !$this->locationIsValid($toLocation)) {
+            !$this->locationIsValid($toLocation) ||
+            $fromLocation == $toLocation) {
             throw new \Allmyles\Exceptions\ValidationException('Invalid location code given!');
         };
         $this->fromLocation = $fromLocation;
@@ -35,7 +36,16 @@ class SearchQuery
     }
 
     private function locationIsValid($locationCode) {
-        return true; // TODO
+        $abc = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
+        if (is_string($locationCode)) {
+            if (strlen($locationCode) == 3) {
+                if ((!(strpos($abc, $locationCode[0]) == false)) and
+                   (!(strpos($abc, $locationCode[1]) == false)) and
+                   (!(strpos($abc, $locationCode[2]) == false))) {
+                    return true;
+                };
+            };
+        };
     }
 
     public function addProviderFilter($providerType)
