@@ -8,11 +8,12 @@ class Request
 {
     private $allmylesRequest;
     private $allmylesResponse;
-    public $debug;
 
-    public function __construct($fullUrl, $method, $data, $headers, $debug = false)
+    public $args;
+
+    public function __construct($fullUrl, $method, $data, $headers)
     {
-
+        $this->args = Array($fullUrl, $method, $data, $headers);
         $uri = parse_url($fullUrl);
 
         if ($uri == false) {
@@ -28,7 +29,6 @@ class Request
         curl_setopt($this->allmylesRequest, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->allmylesRequest, CURLOPT_URL, $fullUrl);
         curl_setopt($this->allmylesRequest, CURLOPT_HEADER, 1);
-        curl_setopt($this->allmylesRequest, CURLOPT_VERBOSE, (int)$this->debug);
 
         $headers['User-Agent'] = ALLMYLES_VERSION;
 
@@ -80,7 +80,7 @@ class Request
         }
 
         if ($postProcessor) {
-            $response->setPostProcessor($postProcessor);
+            $response->postProcessor = $postProcessor;
         }
 
         return $response;
@@ -109,9 +109,10 @@ class Response
     public $incomplete;
     public $data;
     public $postProcessor;
+    public $state;
     private $request;
 
-    public function __construct($allmylesResponse, $request = null, $error = false, $debug = false)
+    public function __construct($allmylesResponse, $request = null, $error = false)
     {
         $this->request = $request;
         $this->headers = array();
@@ -203,11 +204,6 @@ class Response
         $this->incomplete = $this->statusCode == 202;
     }
 
-    public function setPostProcessor($func)
-    {
-        $this->postProcessor = $func;
-    }
-
     public function retry($sleepTime = 0)
     {
         sleep($sleepTime);
@@ -227,30 +223,34 @@ class Response
         };
 
         if (!$this->incomplete) {
-            return call_user_func($this->postProcessor, $data);
+            return $this->postProcessor->process($data);
         };
+    }
+
+    public function saveState()
+    {
+        $this->state = $this->request->args;
+    }
+
+    public function restoreState()
+    {
+        $this->request = new Request(
+            $this->state[0], $this->state[1], $this->state[2], $this->state[3]
+        );
     }
 }
 
 class Curl
 {
     private $baseUrl;
-    public $debug;
 
     public function __construct($baseUrl)
     {
         $this->baseUrl = $baseUrl;
-        $this->debug = false;
     }
 
     public function request($endpoint, $headers, $method = 'GET', $data = null)
     {
-        if ($this->debug) {
-            print("==== DATA =====\n");
-            print $data;
-            print("\n==== END OF DATA =====\n");
-        }
-
         $fullUrl = $this->baseUrl . '/' . $endpoint;
 
         $request = new Request($fullUrl, $method, $data, $headers);

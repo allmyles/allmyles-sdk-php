@@ -7,7 +7,7 @@ require 'Classes/Exceptions.php';
 require 'Classes/Flights.php';
 require 'Classes/Masterdata.php';
 
-define('ALLMYLES_VERSION', 'allmyles-sdk-php v1.0.1');
+define('ALLMYLES_VERSION', 'allmyles-sdk-php v1.0.2');
 
 class Client
 {
