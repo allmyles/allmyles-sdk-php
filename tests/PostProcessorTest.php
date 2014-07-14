@@ -175,7 +175,18 @@ class PostProcessorTest extends \PHPUnit_Framework_TestCase
                     'rulesLink' => 'http://www.ryanair.com/en/terms-and-conditions',
                     'surcharge' => new Common\Price(Array('amount' => 0.0, 'currency' => 'EUR'))
                 )
-            )
+            ),
+            Array(
+                json_decode(file_get_contents('tests/messages/flightDetailsTraditional.json'), true),
+                Array(
+                    'baggageTiers' => Array(),
+                    'fields' => Array(),
+                    'options' => Array(),
+                    'price' => new Common\Price(Array('amount' => 112.7, 'currency' => 'EUR')),
+                    'rulesLink' => null,
+                    'surcharge' => new Common\Price(Array('amount' => 0.0, 'currency' => 'EUR'))
+                )
+            ),
         );
     }
 
@@ -185,6 +196,48 @@ class PostProcessorTest extends \PHPUnit_Framework_TestCase
     public function testFlightDetails($data, $expected)
     {
         $processor = new Common\PostProcessor('getFlightDetails', $this->context);
+        $output = $processor->process($data);
+
+        $this->assertEquals($output, $expected);
+    }
+
+    public function bookFlightProvider()
+    {
+        return Array(
+            Array(null, true),
+            Array(
+                json_decode(file_get_contents('tests/messages/flightBookTraditional.json'), true),
+                Array(
+                    'bookingReferenceId' => 'req-2115ded0dca54061b48614b078bdea67',
+                    'contactInfo' => Array(
+                        'address' => Array(
+                            'city' => 'Budapest',
+                            'countryCode': 'HU',
+                            'line1': 'Váci út 13-14',
+                            'line2': null,
+                            'line3': null
+                        ),
+                        'email' => 'ccc@gmail.com',
+                        'name' => 'Kovacs Gyula',
+                        'phone' => Array(
+                            'areaCode' => '30',
+                            'countryCode' => '36',
+                            'number' => '1234567'
+                        )
+                    ),
+                    'lastTicketingDate' => new \DateTime("2014-07-15T23:59:59Z"),
+                    'pnr' => '6GEHCY'
+                )
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider bookFlightProvider
+     */
+    public function testBookFlight($data, $expected)
+    {
+        $processor = new Common\PostProcessor('bookFlight', $this->context);
         $output = $processor->process($data);
 
         $this->assertEquals($output, $expected);
