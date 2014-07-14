@@ -208,9 +208,11 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
 
             Array('Mr','','Kovacs','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','12345678','HU','Passport')),
             Array('Mr',1,'Kovacs','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','12345678','HU','Passport')),
+            //Array('Mr','János','Kovacs','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','12345678','HU','Passport')),
 
             Array('Mr','Janos','','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','12345678','HU','Passport')),
             Array('Mr','Janos',1,'1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','12345678','HU','Passport')),
+            //Array('Mr','Janos','Kovács','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','12345678','HU','Passport')),
 
             Array('Mr','Janos','Kovacs','1988-00-12','ADT','aAa@gmail.com', array('2016-09-03','12345678','HU','Passport')),
             Array('Mr','Janos','Kovacs','19a8-01-12','ADT','aAa@gmail.com', array('2016-09-03','12345678','HU','Passport')),
@@ -233,6 +235,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             Array('Mr','Janos','Kovacs','1988-01-12','A','aAa@gmail.com', array('2016-09-03','12345678','HU','Passport')),
             Array('Mr','Janos','Kovacs','1988-01-12',1,'aAa@gmail.com', array('2016-09-03','12345678','HU','Passport')),
 
+            Array('Mr','Janos','Kovacs','1988-01-12','ADt','aAagmail.com', array('2016-09-03','12345678','HU','Passport')),
             Array('Mr','Janos','Kovacs','1988-01-12','ADT','', array('2016-09-03','12345678','HU','Passport')),
             Array('Mr','Janos','Kovacs','1988-01-12','ADT',1, array('2016-09-03','12345678','HU','Passport')),
 
@@ -249,6 +252,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             Array('Mr','Janos','Kovacs','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','','HU','Passport')),
             Array('Mr','Janos','Kovacs','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03',1,'HU','Passport')),
 
+            Array('Mr','Janos','Kovacs','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','1034654','HÁ','Passport')),
             Array('Mr','Janos','Kovacs','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','1034654','HUB','Passport')),
             Array('Mr','Janos','Kovacs','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','1034654','','Passport')),
             Array('Mr','Janos','Kovacs','1988-01-12','ADT','aAa@gmail.com', array('2016-09-03','1034654',1,'Passport')),
@@ -265,7 +269,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
     {
         $query = new Flights\BookQuery();
         $query->addPassengers(
-        	Array(
+            Array(
                 'namePrefix' => $prefix,
                 'firstName' => $firstName,
                 'lastName' => $lastName,
@@ -293,6 +297,120 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
                 'passengerTypeCode' => $TypeCode,
                 'email' => $email,
                 'document' => $document
+            )
+        );
+    }
+
+    public function SuccessfulAddressProvider()
+    {
+        return Array(
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+            Array(Array('Vaciut13-14', 'Buenos Aires', '4H', 's1234'), 'ccc@gmail.com', 'KovacsáGyula', Array('323', '33', '1234567'))
+        );
+    }
+
+    public function FailingAddressProvider()
+    {
+        return Array(
+            Array(Array('', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+            Array(Array(1, 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+
+            Array(Array('Váci út 13-14', '', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+            Array(Array('Váci út 13-14', 1, 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+            
+            Array(Array('Váci út 13-14', 'Budapest', 'HÁ', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'S', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', '', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 1, '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', ''), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', 1), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'cccgmail.com', 'Kovacs Gyula', Array('30', '36', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), '', 'Kovacs Gyula', Array('30', '36', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 1, 'Kovacs Gyula', Array('30', '36', '1234567')),
+
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', '', Array('30', '36', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 1, Array('30', '36', '1234567')),
+            
+            //Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('3', '36', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('2a', '36', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('', '36', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array(1, '36', '1234567')),
+
+            //Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '3', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '3a', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '', '1234567')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', 1, '1234567')),
+
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '12345a7')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', '')),
+            Array(Array('Váci út 13-14', 'Budapest', 'HU', '1234'), 'ccc@gmail.com', 'Kovacs Gyula', Array('30', '36', 1))
+        );
+    }
+
+    /**
+     * @dataProvider SuccessfulAddressProvider
+     */
+    public function testSuccessfulContactInfo($address, $email, $name, $phone)
+    {
+        $query = new Flights\BookQuery();
+        $query->addContactInfo(
+        	Array(
+                'address' => $address,
+                'email' => $email,
+                'name' => $name,
+                'phone' => $phone
+            )
+        );
+    }
+
+    /**
+     * @dataProvider FailingAddressProvider
+     * @expectedException \Allmyles\Exceptions\ValidationException
+     */
+    public function testFailingContactInfo($address, $email, $name, $phone)
+    {
+        $query = new Flights\BookQuery();
+        $query->addContactInfo(
+            Array(
+                'address' => $address,
+                'email' => $email,
+                'name' => $name,
+                'phone' => $phone
+            )
+        );
+    }
+
+    /**
+     * @dataProvider SuccessfulAddressProvider
+     */
+    public function testSuccessfulBillingInfo($address, $email, $name, $phone)
+    {
+        $query = new Flights\BookQuery();
+        $query->addBillingInfo(
+            Array(
+                'address' => $address,
+                'email' => $email,
+                'name' => $name,
+                'phone' => $phone
+            )
+        );
+    }
+
+    /**
+     * @dataProvider FailingAddressProvider
+     * @expectedException \Allmyles\Exceptions\ValidationException
+     */
+    public function testFailingBillingInfo($address, $email, $name, $phone)
+    {
+        $query = new Flights\BookQuery();
+        $query->addBillingInfo(
+            Array(
+                'address' => $address,
+                'email' => $email,
+                'name' => $name,
+                'phone' => $phone
             )
         );
     }

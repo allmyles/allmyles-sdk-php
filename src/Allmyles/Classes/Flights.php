@@ -343,6 +343,9 @@ class BookQuery
           $this->passengers = array();
         };
 
+        $a01 = '-0123456789';
+        $ab0 = '-AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789';
+
         foreach (array_values($passengers) as $value) {
             // Check if all items in $passengers are arrays. If not, then we
             // got a single passenger only, and need to wrap it in an array.
@@ -380,10 +383,26 @@ class BookQuery
                 	(strlen($passenger['document']['1']) > 0) and 
                 	(strlen($passenger['document']['3']) > 0))) {
                 	    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+                } else {
+
+                	// If names would be needed to be written in the english alphabet
+
+                    /*for ($i = 0; $i < strlen($passenger['firstName']); $i++) {
+               	        if (strpos($ab0, $passenger['firstName'][$i]) == false) {
+        		    	    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        		        };
+        		    };
+        		    for ($i = 0; $i < strlen($passenger['lastName']); $i++) {
+               	        if (strpos($ab0, $passenger['lastName'][$i]) == false) {
+        		    	    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        		        };
+        		    };*/
+
+        		    if (strpos($passenger['email'], '@') == false) {
+        		        throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        		    };
                 };
             } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
-
-        	$a01 = '-0123456789';
 
         	if (strlen($passenger['birthDate']) == 10) {
         		for ($i = 0; $i <= 9; $i++) {
@@ -456,8 +475,6 @@ class BookQuery
 
             } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
 
-            $ab0 = '-AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789';
-
         	if ((!((is_string($passenger['document']['2'])) and (strlen($passenger['document']['2']) == 2))) or 
         	    (strpos($ab0, $passenger['document']['2'][0]) == false) or (strpos($ab0, $passenger['document']['2'][1]) == false)) {
                 throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
@@ -469,11 +486,87 @@ class BookQuery
 
     public function addContactInfo($address)
     {
+    	$a01 = '-0123456789';
+        $ab0 = '- AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789';
+
+        if ((is_string($address['address']['0'])) and 
+        (is_string($address['address']['1'])) and
+        (is_string($address['address']['3'])) and 
+        (is_string($address['email'])) and
+        (is_string($address['name']))) {
+            if ((strlen($address['address']['0']) > 0) and 
+            (strlen($address['address']['1']) > 0) and 
+            (strlen($address['address']['3']) > 0) and
+            (strlen($address['email']) > 0) and 
+            (strlen($address['name']) > 0)) {
+                if (strpos($address['email'], '@') == false) {
+        		    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        		};
+            } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+
+        if ((!((is_string($address['address']['2'])) and (strlen($address['address']['2']) == 2))) or 
+    	    (strpos($ab0, $address['address']['2'][0]) == false) or (strpos($ab0, $address['address']['2'][1]) == false)) {
+            throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        };
+
+        if ((is_string($address['phone']['0'])) and 
+        (is_string($address['phone']['1'])) and 
+        (is_string($address['phone']['2']))) {
+        	if ((is_numeric($address['phone']['0'])) and 
+            (is_numeric($address['phone']['1'])) and 
+            (is_numeric($address['phone']['2']))) {
+                if (!((strlen($address['phone']['0']) > 0) and 
+                (strlen($address['phone']['1']) > 0) and 
+                (strlen($address['phone']['2']) > 0))) {
+                    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+                };
+            } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+
         $this->contactInfo = $address;
     }
 
     public function addBillingInfo($address)
     {
+        $a01 = '-0123456789';
+        $ab0 = '- AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789';
+
+        if ((is_string($address['address']['0'])) and 
+        (is_string($address['address']['1'])) and
+        (is_string($address['address']['3'])) and 
+        (is_string($address['email'])) and
+        (is_string($address['name']))) {
+            if ((strlen($address['address']['0']) > 0) and 
+            (strlen($address['address']['1']) > 0) and 
+            (strlen($address['address']['3']) > 0) and
+            (strlen($address['email']) > 0) and 
+            (strlen($address['name']) > 0)) {
+                if (strpos($address['email'], '@') == false) {
+        		    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        		};
+            } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+
+        if ((!((is_string($address['address']['2'])) and (strlen($address['address']['2']) == 2))) or 
+    	    (strpos($ab0, $address['address']['2'][0]) == false) or (strpos($ab0, $address['address']['2'][1]) == false)) {
+            throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        };
+
+        if ((is_string($address['phone']['0'])) and 
+        (is_string($address['phone']['1'])) and 
+        (is_string($address['phone']['2']))) {
+        	if ((is_numeric($address['phone']['0'])) and 
+            (is_numeric($address['phone']['1'])) and 
+            (is_numeric($address['phone']['2']))) {
+                if (!((strlen($address['phone']['0']) > 0) and 
+                (strlen($address['phone']['1']) > 0) and 
+                (strlen($address['phone']['2']) > 0))) {
+                    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+                };
+            } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+
         $this->billingInfo = $address;
     }
 
