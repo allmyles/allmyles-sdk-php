@@ -98,8 +98,8 @@ class SearchQuery
     	if ((is_int($adt)) and 
     		(is_int($chd)) and 
     		(is_int($inf))) {
-    		if (!(($adt>0) and ($chd>=0) and ($inf>=0) and 
-    			($adt>=$inf) and ($adt+$chd+$inf<10))) {
+    		if (!(($adt > 0) and ($chd >= 0) and ($inf >= 0) and 
+    			($adt >= $inf) and ($adt + $chd <= 9) and ($inf <=9))) {
     			throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
     		};
         } else {
@@ -364,7 +364,104 @@ class BookQuery
                 case 'mrs':
                     $passenger['gender'] = 'FEMALE';
                     break;
+                default:
+                    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+                    break;
             }
+
+            if ((is_string($passenger['firstName'])) and 
+            	(is_string($passenger['lastName'])) and 
+            	(is_string($passenger['email'])) and 
+            	(is_string($passenger['document']['1'])) and
+            	(is_string($passenger['document']['3']))) {
+                if (!((strlen($passenger['firstName']) > 0) and 
+                	(strlen($passenger['lastName']) > 0) and 
+                	(strlen($passenger['email']) > 0) and 
+                	(strlen($passenger['document']['1']) > 0) and 
+                	(strlen($passenger['document']['3']) > 0))) {
+                	    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+                };
+            } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+
+        	$a01 = '-0123456789';
+
+        	if (strlen($passenger['birthDate']) == 10) {
+        		for ($i = 0; $i <= 9; $i++) {
+               	    if (($i == 4) or ($i == 7)) {
+               	    	if (!($passenger['birthDate'][$i] == '-')) {
+        			        throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+               	        };
+        		    } else {
+        		    	if (strpos($a01, $passenger['birthDate'][$i]) == false) {
+        		    	    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        		        };
+        		    };
+        		
+        		};
+
+        	    $passengerBirthYear = substr($passenger['birthDate'], 0, 4);
+        	    $passengerBirthMonth = substr($passenger['birthDate'], 5, 2);
+        	    $passengerBirthDay = substr($passenger['birthDate'], 8, 2);
+
+        	    if (checkdate($passengerBirthMonth, $passengerBirthDay, $passengerBirthYear)) {
+        	    	if (strtotime($passenger['birthDate']) > strtotime(date('Y-m-d'))) {
+        	    		throw new \Allmyles\Exceptions\ValidationException('Expired document!');
+        	    	};
+        	    } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+
+            } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+
+        	switch (strtolower($passenger['passengerTypeCode'])) {
+                case 'adt':
+                    
+                    break;
+                case 'chd':
+                    if (strtotime($passenger['birthDate']) < strtotime(date('Y-m-d', strtotime('-12 year')))) {
+        	    		throw new \Allmyles\Exceptions\ValidationException('Expired document!');
+        	    	};
+                    break;
+                case 'inf':
+                    if (strtotime($passenger['birthDate']) < strtotime(date('Y-m-d', strtotime('-2 year')))) {
+        	    		throw new \Allmyles\Exceptions\ValidationException('Expired document!');
+        	    	};
+                    break;
+                default:
+                    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+                    break;
+            }
+
+        	if (strlen($passenger['document']['0']) == 10) {
+        		for ($i = 0; $i <= 9; $i++) {
+               	    if (($i == 4) or ($i == 7)) {
+               	    	if (!($passenger['document']['0'][$i] == '-')) {
+        			        throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+               	        };
+        		    } else {
+        		    	if (strpos($a01, $passenger['document']['0'][$i]) == false) {
+        		    	    throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+        		        };
+        		    };
+        		
+        		};
+
+        	    $yearOfExpirity = substr($passenger['document']['0'], 0, 4);
+        	    $monthOfExpirity = substr($passenger['document']['0'], 5, 2);
+        	    $dayOfExpirity = substr($passenger['document']['0'], 8, 2);
+
+        	    if ((checkdate($monthOfExpirity, $dayOfExpirity, $yearOfExpirity))) {
+        	    	if (strtotime($passenger['document']['0']) < strtotime(date('Y-m-d'))) {
+        	    		throw new \Allmyles\Exceptions\ValidationException('Expired document!');
+        	    	};
+        	    } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+
+            } else throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+
+            $ab0 = '-AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789';
+
+        	if ((!((is_string($passenger['document']['2'])) and (strlen($passenger['document']['2']) == 2))) or 
+        	    (strpos($ab0, $passenger['document']['2'][0]) == false) or (strpos($ab0, $passenger['document']['2'][1]) == false)) {
+                throw new \Allmyles\Exceptions\ValidationException('Invalid passenger data given!');
+            };
 
             array_push($this->passengers, $passenger);
         };
