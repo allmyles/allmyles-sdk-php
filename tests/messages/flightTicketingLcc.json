@@ -1,0 +1,46 @@
+{
+  "bookingReferenceId": "req-2115ded0dca54061b48614b078bdea67",
+  "contactInfo": {
+    "address": {
+      "city": "Budapest",
+      "countryCode": "HU",
+      "line1": "Váci út 13-14",
+      "line2": null,
+      "line3": null
+    },
+    "email": "ccc@gmail.com",
+    "name": "Kovács Gyula",
+    "phone": {
+      "areaCode": 30,
+      "countryCode": 36,
+      "number": 1234567
+    }
+  },
+  "flightData": {
+    "currency": "EUR",
+    "legs": [
+      {
+        "segments": [
+          {
+            "airline": "FR",
+            "arrival": {
+              "airport": "DUB",
+              "terminal": null,
+              "time": "2014-10-24T23:40:00Z"
+            },
+            "departure": {
+              "airport": "BUD",
+              "terminal": null,
+              "time": "2014-10-24T21:25:00Z"
+            },
+            "flightNumber": "1024"
+          }
+        ]
+      }
+    ],
+    "price": "59.996800"
+  },
+  "lastTicketingDate": null,
+  "pnr": "6GEHCY",
+  "ticket": "UJEUI6P"
+}

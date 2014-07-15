@@ -242,4 +242,96 @@ class PostProcessorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($output, $expected);
     }
+
+    public function testAddPayuPayment()
+    {
+        $processor = new Common\PostProcessor('addPayuPayment', $this->context);
+        $output = $processor->process(null);
+
+        $this->assertEquals($output, true);
+    }
+
+    public function flightTicketingProvider()
+    {
+        return Array(
+            Array(
+                json_decode(file_get_contents('tests/messages/flightTicketingLcc.json'), true),
+                Array(
+                    'bookingReferenceId' => 'req-2115ded0dca54061b48614b078bdea67',
+                    'contactInfo' => Array(
+                        'address' => Array(
+                            'city' => 'Budapest',
+                            'countryCode' => 'HU',
+                            'line1' => 'Váci út 13-14',
+                            'line2' => null,
+                            'line3' => null
+                        ),
+                        'email' => 'ccc@gmail.com',
+                        'name' => 'Kovács Gyula',
+                        'phone' => Array(
+                            'areaCode' => '30',
+                            'countryCode' => '36',
+                            'number' => '1234567'
+                        )
+                    ),
+                    'pnr' => '6GEHCY',
+                    'ticket' => 'UJEUI6P'
+                )
+            ),
+            Array(
+                json_decode(file_get_contents('tests/messages/flightTicketingTraditional.json'), true),
+                Array(
+                    'tickets' => Array(
+                        Array('passenger' => 'Mr Janos Kovacs', 'ticket' => '123-4567890123')
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * @dataProvider flightTicketingProvider
+     */
+    public function testFlightTicketing($data, $expected)
+    {
+        $processor = new Common\PostProcessor('createFlightTicket', $this->context);
+        $output = $processor->process($data);
+
+        $this->assertEquals($output, $expected);
+    }
+
+    public function locationSearchProvider()
+    {
+        return Array(
+            Array(
+                json_decode(file_get_contents('tests/messages/locationSearch.json'), true),
+                Array(
+                    Array(
+                        'category' => 'airport',
+                        'countryCode' => 'HU',
+                        'cityName' => 'Budapest',
+                        'iataCode' => 'BUD',
+                        'canonicalName' => 'Budapest, HU - Liszt Ferenc Intl (BUD)',
+                        'countryName' => 'Hungary',
+                        'htmlFragment' => '<strong>Bud</strong>apest, HU - Liszt Ferenc Intl (<strong>BUD</strong>)'
+                    )
+                )
+            ),
+            Array(
+                Array('locationSearchResult' => Array()),
+                Array()
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider locationSearchProvider
+     */
+    public function testLocationSearch($data, $expected)
+    {
+        $processor = new Common\PostProcessor('searchLocations', $this->context);
+        $output = $processor->process($data);
+
+        $this->assertEquals($output, $expected);
+    }
 }

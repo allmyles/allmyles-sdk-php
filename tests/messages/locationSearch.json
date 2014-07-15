@@ -1,0 +1,13 @@
+{
+  "locationSearchResult": [
+    {
+      "canonicalName": "Budapest, HU - Liszt Ferenc Intl (BUD)",
+      "category": "airport",
+      "cityName": "Budapest",
+      "countryCode": "HU",
+      "countryName": "Hungary",
+      "htmlFragment": "<strong>Bud</strong>apest, HU - Liszt Ferenc Intl (<strong>BUD</strong>)",
+      "iataCode": "BUD"
+    }
+  ]
+}
