@@ -46,6 +46,11 @@ class PostProcessor
     private function getFlightDetails($data, $context)
     {
         $results = $data['flightDetails'];
+        for ($i = 0; $i < count($results['baggageTiers']); $i++) {
+            if (isset($results['baggageTiers'][$i])) {
+                $results['baggageTiers'][$i]['price'] = new \Allmyles\Common\Price($results['baggageTiers'][$i]['price']);
+            };
+        }
         $results['surcharge'] = new \Allmyles\Common\Price($results['surcharge']);
         $results['price'] = new \Allmyles\Common\Price($results['price']);
         unset($results['result']);
@@ -58,6 +63,8 @@ class PostProcessor
         if ($data == null) {
             return true;
         } else {
+            var_dump($data['lastTicketingDate']);
+            $data['lastTicketingDate'] = new \datetime($data['lastTicketingDate']);
             return $data;
         };
     }
