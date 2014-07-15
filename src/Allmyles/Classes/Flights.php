@@ -27,10 +27,8 @@ class SearchQuery
         $this->returnDate = $this->getTimestamp($returnDate);
         $this->passengers = Array();
         $this->providerType = null;
-        $this->preferredAirlines = null;
-        $this->passengers['ADT'] = null;
-        $this->passengers['CHD'] = null;
-        $this->passengers['INF'] = null;
+        $this->preferredAirlines = Array();
+        $this->passengers = Array('ADT' => 0, 'CHD' => 0, 'INF' => 0);
     }
 
     public function addProviderFilter($providerType)
@@ -40,19 +38,13 @@ class SearchQuery
 
     public function addAirlineFilter($airlines)
     {
-        if ($this->preferredAirlines == null) {
-          $this->preferredAirlines = array();
+        if (is_string($airlines)) {
+            $airlines = Array($airlines);
         };
 
-        if (is_array($airlines)) {
-            foreach ($airlines as $airline) {
-                if (in_array($airline, $this->preferredAirlines) == 0) {
-                    array_push($this->preferredAirlines, $airline);
-                };
-            };
-        } else {
-            if (in_array($airlines, $this->preferredAirlines) == 0) {
-                array_push($this->preferredAirlines, $airlines);
+        foreach ($airlines as $airline) {
+            if (!in_array($airline, $this->preferredAirlines)) {
+                array_push($this->preferredAirlines, $airline);
             };
         };
     }
