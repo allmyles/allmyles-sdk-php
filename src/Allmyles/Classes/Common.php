@@ -72,9 +72,7 @@ class PostProcessor
     private function addPayuPayment($data, $context)
     {
         // We are expecting no content
-        if ($data == null) {
-            return true;
-        };
+        return true;
     }
 
     private function createFlightTicket($data, $context)

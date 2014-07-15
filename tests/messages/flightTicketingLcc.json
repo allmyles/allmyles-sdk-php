@@ -9,7 +9,7 @@
       "line3": null
     },
     "email": "ccc@gmail.com",
-    "name": "Kovacs Gyula",
+    "name": "Kovács Gyula",
     "phone": {
       "areaCode": 30,
       "countryCode": 36,
@@ -22,24 +22,25 @@
       {
         "segments": [
           {
-            "airline": "EI",
+            "airline": "FR",
             "arrival": {
               "airport": "DUB",
-              "terminal": "2",
-              "time": "2014-10-24T22:50:00Z"
+              "terminal": null,
+              "time": "2014-10-24T23:40:00Z"
             },
             "departure": {
               "airport": "BUD",
-              "terminal": "2B",
-              "time": "2014-10-24T20:40:00Z"
+              "terminal": null,
+              "time": "2014-10-24T21:25:00Z"
             },
-            "flightNumber": "679"
+            "flightNumber": "1024"
           }
         ]
       }
     ],
-    "price": "157.77"
+    "price": "59.996800"
   },
-  "lastTicketingDate": "2014-07-15T23:59:59Z",
-  "pnr": "6GEHCY"
+  "lastTicketingDate": null,
+  "pnr": "6GEHCY",
+  "ticket": "UJEUI6P"
 }
