@@ -27,7 +27,8 @@ class SearchQuery
         $this->returnDate = $this->getTimestamp($returnDate);
         $this->passengers = Array();
         $this->providerType = null;
-        $this->preferredAirlines = null;
+        $this->preferredAirlines = Array();
+        $this->passengers = Array('ADT' => 0, 'CHD' => 0, 'INF' => 0);
     }
 
     public function addProviderFilter($providerType)
@@ -37,24 +38,22 @@ class SearchQuery
 
     public function addAirlineFilter($airlines)
     {
-        if ($this->preferredAirlines == null) {
-          $this->preferredAirlines = array();
+        if (is_string($airlines)) {
+            $airlines = Array($airlines);
         };
 
-        if (is_array($airlines)) {
-            foreach ($airlines as $airline) {
+        foreach ($airlines as $airline) {
+            if (!in_array($airline, $this->preferredAirlines)) {
                 array_push($this->preferredAirlines, $airline);
             };
-        } else {
-            array_push($this->preferredAirlines, $airlines);
         };
     }
 
     public function addPassengers($adt, $chd = 0, $inf = 0)
     {
-        $this->passengers['ADT'] = $adt;
-        $this->passengers['CHD'] = $chd;
-        $this->passengers['INF'] = $inf;
+        $this->passengers['ADT'] += $adt;
+        $this->passengers['CHD'] += $chd;
+        $this->passengers['INF'] += $inf;
     }
 
     public function getData()
@@ -331,7 +330,11 @@ class BookQuery
     {
         $data = Array();
         $data['passengers'] = $this->passengers;
-        $data['billingInfo'] = $this->billingInfo;
+        if (isset($this->billingInfo)) {
+            $data['billingInfo'] = $this->billingInfo;
+        } else {
+        	$data['billingInfo'] = $this->contactInfo;
+        };
         $data['contactInfo'] = $this->contactInfo;
         $data['bookingId'] = $this->bookingId;
         return $data;
