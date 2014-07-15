@@ -63,8 +63,8 @@ class PostProcessor
         if ($data == null) {
             return true;
         } else {
-            var_dump($data['lastTicketingDate']);
             $data['lastTicketingDate'] = new \datetime($data['lastTicketingDate']);
+            unset($data['flightData']);
             return $data;
         };
     }
@@ -78,12 +78,12 @@ class PostProcessor
     private function createFlightTicket($data, $context)
     {
             if (array_key_exists('tickets', $data)) {
-                $results = $data['tickets'];
+                $results = array('tickets' => $data['tickets']);
             } else {
                 unset($data['flightData']);
+                unset($data['lastTicketingDate']);
                 $results = $data;
             };
-
             return $results;
     }
 
