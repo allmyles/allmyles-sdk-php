@@ -10,8 +10,8 @@ class PostProcessorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->context = new Context($this, null);
         date_default_timezone_set('UTC');
+        $this->context = new Context($this, null);
 
         $this->flightSearchResponse = json_decode(file_get_contents('tests/messages/flightSearchNormal.json'), true);
         $this->flightSearchProcessor = new Common\PostProcessor('searchFlight', $this->context);
@@ -212,10 +212,10 @@ class PostProcessorTest extends \PHPUnit_Framework_TestCase
                     'contactInfo' => Array(
                         'address' => Array(
                             'city' => 'Budapest',
-                            'countryCode': 'HU',
-                            'line1': 'Váci út 13-14',
-                            'line2': null,
-                            'line3': null
+                            'countryCode' => 'HU',
+                            'line1' => 'Váci út 13-14',
+                            'line2' => null,
+                            'line3' => null
                         ),
                         'email' => 'ccc@gmail.com',
                         'name' => 'Kovacs Gyula',
@@ -225,10 +225,10 @@ class PostProcessorTest extends \PHPUnit_Framework_TestCase
                             'number' => '1234567'
                         )
                     ),
-                    'lastTicketingDate' => new \DateTime("2014-07-15T23:59:59Z"),
+                    'lastTicketingDate' => new \DateTime("2014-07-15T23:59:59Z", new \DateTimeZone('UTC')),
                     'pnr' => '6GEHCY'
                 )
-            ),
+            )
         );
     }
 

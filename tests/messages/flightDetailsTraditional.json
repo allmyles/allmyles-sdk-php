@@ -1,0 +1,75 @@
+{
+  "flightDetails": {
+    "baggageTiers": [],
+    "fields": {},
+    "options": {},
+    "price": {
+      "amount": 112.7,
+      "currency": "EUR"
+    },
+    "result": {
+      "breakdown": [
+        {
+          "passengerFare": {
+            "fare": 107.7,
+            "quantity": 1,
+            "ticketDesignators": [
+              {
+                "code": "70|PEN",
+                "extension": "TICKETS ARE NON-REFUNDABLE|"
+              },
+              {
+                "code": "40|LTD",
+                "extension": "LAST TKT DTE|14JUL14| - SEE ADV PURCHASE|"
+              },
+              {
+                "code": "79|SUR",
+                "extension": "FARE VALID FOR E TICKET ONLY|"
+              }
+            ],
+            "type": "ADT"
+          }
+        }
+      ],
+      "combinations": [
+        {
+          "firstLeg": {
+            "elapsedTime": "0245",
+            "flightSegments": [
+              {
+                "arrival": {
+                  "airport": {
+                    "code": "LHR",
+                    "terminal": "3"
+                  },
+                  "dateTime": "2014-12-24T10:00:00"
+                },
+                "availableSeats": 3,
+                "cabin": "economy",
+                "departure": {
+                  "airport": {
+                    "code": "BUD",
+                    "terminal": "2B"
+                  },
+                  "dateTime": "2014-12-24T08:15:00"
+                },
+                "flightNumber": "865",
+                "operatingAirline": "BA"
+              }
+            ]
+          },
+          "providerType": "AmadeusProvider",
+          "serviceFeeAmount": 5.0
+        }
+      ],
+      "currency": "EUR",
+      "total_fare": 112.7
+    },
+    "rulesLink": null,
+    "surcharge": {
+      "amount": 0.0,
+      "card_type": null,
+      "currency": "EUR"
+    }
+  }
+}
