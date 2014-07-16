@@ -16,11 +16,21 @@ class SearchQuery
     private $preferredAirlines;
 
     public function __construct(
-        $fromLocation,
-        $toLocation,
+        string $fromLocation,
+        string $toLocation,
         $departureDate,
         $returnDate = null
     ) {
+        if (!(is_string($departureDate))) {
+            if (is_object($departureDate)) {
+                if (!(get_class($departureDate) == '\DateTime')) throw new Exception('Fatal Error: Argument 1 must be an ISO formatted timestamp, or a DateTime object');
+            } else throw new Exception('Fatal Error: Argument 1 must be an ISO formatted timestamp, or a DateTime object');
+        };
+        if (!(is_string($returnDate))) {
+            if (is_object($returnDate)) {
+                if (!(get_class($returnDate) == '\DateTime')) throw new Exception('Fatal Error: Argument 1 must be an ISO formatted timestamp, or a DateTime object');
+            } else throw new Exception('Fatal Error: Argument 1 must be an ISO formatted timestamp, or a DateTime object');
+        };
         $this->fromLocation = $fromLocation;
         $this->toLocation = $toLocation;
         $this->departureDate = $this->getTimestamp($departureDate);
@@ -31,25 +41,30 @@ class SearchQuery
         $this->passengers = Array('ADT' => 0, 'CHD' => 0, 'INF' => 0);
     }
 
-    public function addProviderFilter($providerType)
+    public function addProviderFilter(string $providerType)
     {
         $this->providerType = $providerType;
     }
 
     public function addAirlineFilter($airlines)
     {
+
         if (is_string($airlines)) {
             $airlines = Array($airlines);
         };
-
-        foreach ($airlines as $airline) {
-            if (!in_array($airline, $this->preferredAirlines)) {
-                array_push($this->preferredAirlines, $airline);
+        if (is_array($airlines)) {
+            foreach ($airlines as $airline) {
+                if (!(is_string($airline))) throw new Exception('Fatal Error: Argument 1 must be a string, or an array of strings');
             };
-        };
+            foreach ($airlines as $airline) {
+                if (!in_array($airline, $this->preferredAirlines)) {
+                    array_push($this->preferredAirlines, $airline);
+                };
+            };
+        } else throw new Exception('Fatal Error: Argument 1 must be a string, or an array of strings');
     }
 
-    public function addPassengers($adt, $chd = 0, $inf = 0)
+    public function addPassengers(integer $adt, integer $chd = 0, integer $inf = 0)
     {
         $this->passengers['ADT'] += $adt;
         $this->passengers['CHD'] += $chd;
@@ -167,7 +182,11 @@ class Combination
         if (is_array($parameters)) {
             $parameters['bookingId'] = $this->bookingId;
         } else {
-            $parameters->setBookingId($this->bookingId);
+            if (is_object($parameters)) {
+                if (get_class($parameters) == 'BookQuery') {
+                    $parameters->setBookingId($this->bookingId);
+                } else throw new Exception('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');       
+            } else throw new Exception('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');
         };
         $bookResponse = $this->context->client->bookFlight(
             $parameters, $this->context->session
@@ -175,7 +194,7 @@ class Combination
         return $bookResponse;
     }
 
-    public function addPayuPayment($payuId)
+    public function addPayuPayment(string $payuId)
     {
         $paymentResponse = $this->context->client->addPayuPayment(
             $payuId, $this->context->session
@@ -265,7 +284,7 @@ class BookQuery
     private $billingInfo;
     private $contactInfo;
 
-    public function __construct($passengers = null, $contactInfo = null, $billingInfo = null)
+    public function __construct(array $passengers = null, array $contactInfo = null, array $billingInfo = null)
     {
         if ($passengers != null) {
             $this->addPassengers($passengers);
@@ -283,7 +302,7 @@ class BookQuery
         $this->bookingId = $bookingId;
     }
 
-    public function addPassengers($passengers)
+    public function addPassengers(array $passengers)
     {
         if ($this->passengers == null) {
           $this->passengers = array();
@@ -316,12 +335,12 @@ class BookQuery
         };
     }
 
-    public function addContactInfo($address)
+    public function addContactInfo(array $address)
     {
         $this->contactInfo = $address;
     }
 
-    public function addBillingInfo($address)
+    public function addBillingInfo(array $address)
     {
         $this->billingInfo = $address;
     }

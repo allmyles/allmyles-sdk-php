@@ -13,19 +13,23 @@ class Client
 {
     protected $connector;
 
-    public function __construct($baseUrl, $authKey)
+    public function __construct(string $baseUrl, string $authKey)
     {
         $this->connector = new Connector\ServiceConnector($baseUrl, $authKey);
     }
 
-    public function searchFlight($parameters, $async = true, $session = null)
+    public function searchFlight($parameters, boolean $async = true, string $session = null)
     {
         $context = new Context($this, ($session ? $session : uniqid()));
 
         if (is_array($parameters)) {
             $data = json_encode($parameters);
         } else {
-            $data = json_encode($parameters->getData());
+            if (is_object($parameters)) {
+                if (get_class($parameters) == 'Flights\SearchQuery') {
+                    $data = json_encode($parameters->getData());
+                } else throw new Exception('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');       
+            } else throw new Exception('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');
         }
 
         $response = $this->connector->post('flights', $context, $data);
@@ -42,7 +46,7 @@ class Client
         return $response;
     }
 
-    public function getFlightDetails($bookingId, $session = null) {
+    public function getFlightDetails(string $bookingId, string $session = null) {
         $context = new Context($this, ($session ? $session : uniqid()));
 
         $response = $this->connector->get('flights/' . $bookingId, $context);
@@ -52,7 +56,7 @@ class Client
         return $response;
     }
 
-    public function bookFlight($parameters, $session = null) {
+    public function bookFlight(array $parameters, string $session = null) {
         $context = new Context($this, ($session ? $session : uniqid()));
 
         if (is_array($parameters)) {
@@ -68,7 +72,7 @@ class Client
         return $response;
     }
 
-    public function addPayuPayment($payuId, $session = null) {
+    public function addPayuPayment(string $payuId, string $session = null) {
         $context = new Context($this, ($session ? $session : uniqid()));
 
         $data = json_encode(Array('payuId' => $payuId));
@@ -79,7 +83,7 @@ class Client
         return $response;
     }
 
-    public function createFlightTicket($bookingId, $session = null) {
+    public function createFlightTicket(string $bookingId, string $session = null) {
         $context = new Context($this, ($session ? $session : uniqid()));
 
         $response = $this->connector->get('tickets/' . $bookingId, $context);
@@ -89,7 +93,7 @@ class Client
         return $response;
     }
 
-    public function searchLocations($parameters, $session = null)
+    public function searchLocations(array $parameters, string $session = null)
     {
         $context = new Context($this, ($session ? $session : uniqid()));
         $response = $this->connector->get('masterdata/search', $context, $parameters);
