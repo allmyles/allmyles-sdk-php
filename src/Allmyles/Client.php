@@ -18,6 +18,11 @@ class Client
         $this->connector = new Connector\ServiceConnector($baseUrl, $authKey);
     }
 
+    private function sendRequest($method, $path, $context, $data = Array())
+    {
+        return $this->connector->$method($path, $context, $data);
+    }
+
     public function searchFlight($parameters, boolean $async = true, string $session = null)
     {
         $context = new Context($this, ($session ? $session : uniqid()));
@@ -32,7 +37,7 @@ class Client
             } else throw new Exception('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');
         }
 
-        $response = $this->connector->post('flights', $context, $data);
+        $response = $this->sendRequest('post', 'flights', $context, $data);
 
         if (!$async && $response->incomplete) {
             while ($response->incomplete) {
@@ -65,7 +70,7 @@ class Client
             $data = json_encode($parameters->getData());
         }
 
-        $response = $this->connector->post('books', $context, $data);
+        $response = $this->sendRequest('post', 'books', $context, $data);
 
         $response->postProcessor = new Common\PostProcessor('bookFlight', $context);
 
@@ -76,7 +81,7 @@ class Client
         $context = new Context($this, ($session ? $session : uniqid()));
 
         $data = json_encode(Array('payuId' => $payuId));
-        $response = $this->connector->post('payment', $context, $data);
+        $response = $this->sendRequest('post', 'payment', $context, $data);
 
         $response->postProcessor = new Common\PostProcessor('addPayuPayment', $context);
 
@@ -86,7 +91,7 @@ class Client
     public function createFlightTicket(string $bookingId, string $session = null) {
         $context = new Context($this, ($session ? $session : uniqid()));
 
-        $response = $this->connector->get('tickets/' . $bookingId, $context);
+        $response = $this->sendRequest('get', 'tickets/' . $bookingId, $context);
 
         $response->postProcessor = new Common\PostProcessor('createFlightTicket', $context);
 
@@ -96,7 +101,7 @@ class Client
     public function searchLocations(array $parameters, string $session = null)
     {
         $context = new Context($this, ($session ? $session : uniqid()));
-        $response = $this->connector->get('masterdata/search', $context, $parameters);
+        $response = $this->sendRequest('get', 'masterdata/search', $context, $parameters);
 
         $response->postProcessor = new Common\PostProcessor('searchLocations', $context);
 
