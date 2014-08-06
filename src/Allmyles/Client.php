@@ -7,7 +7,7 @@ require 'Classes/Exceptions.php';
 require 'Classes/Flights.php';
 require 'Classes/Masterdata.php';
 
-define('ALLMYLES_VERSION', 'allmyles-sdk-php v1.0.2');
+define('ALLMYLES_VERSION', 'allmyles-sdk-php v1.0.3');
 
 class Client
 {
@@ -95,6 +95,16 @@ class Client
         $response = $this->connector->get('masterdata/search', $context, $parameters);
 
         $response->postProcessor = new Common\PostProcessor('searchLocations', $context);
+
+        return $response;
+    }
+
+    public function retrieveMasterdata($repo, $session = null)
+    {
+        $context = new Context($this, ($session ? $session : uniqid()));
+        $response = $this->connector->get('masterdata/' . $repo, $context, $parameters);
+
+        $response->postProcessor = new Common\PostProcessor('getMasterdata', $context);
 
         return $response;
     }

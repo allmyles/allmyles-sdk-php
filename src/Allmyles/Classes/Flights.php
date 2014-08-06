@@ -100,7 +100,7 @@ class FlightResult
     public $totalFare;
     public $combinations;
 
-    public function __construct($result, &$context)
+    public function __construct($result, $context)
     {
         $this->context = &$context;
 
@@ -127,7 +127,7 @@ class Combination
     public $legs;
     public $serviceFee;
 
-    public function __construct($combination, &$flightResult)
+    public function __construct($combination, $flightResult)
     {
         $this->flightResult = $flightResult;
         $this->context = &$this->flightResult->context;
@@ -200,7 +200,7 @@ class Leg
     public $length;
     public $segments;
 
-    public function __construct($leg, &$combination)
+    public function __construct($leg, $combination)
     {
         $this->combination = $combination;
         $this->context = &$this->combination->context;
@@ -226,7 +226,7 @@ class Segment
     public $availableSeats;
     public $cabin;
 
-    public function __construct($segment, &$leg)
+    public function __construct($segment, $leg)
     {
         $this->leg = $leg;
         $this->context = &$this->leg->context;
@@ -248,7 +248,7 @@ class Stop
     public $airport;
     public $terminal;
 
-    public function __construct($stop, &$segment)
+    public function __construct($stop, $segment)
     {
         $this->segment = $segment;
         $this->context = &$this->segment->context;
