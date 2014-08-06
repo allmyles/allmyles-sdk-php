@@ -98,6 +98,16 @@ class Client
 
         return $response;
     }
+
+    public function retrieveMasterdata($repo, $session = null)
+    {
+        $context = new Context($this, ($session ? $session : uniqid()));
+        $response = $this->connector->get('masterdata/' . $repo, $context, $parameters);
+
+        $response->postProcessor = new Common\PostProcessor('getMasterdata', $context);
+
+        return $response;
+    }
 }
 
 class Context
