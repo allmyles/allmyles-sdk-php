@@ -26,7 +26,6 @@ class PostProcessorTest extends \PHPUnit_Framework_TestCase
             new Flights\FlightResult($data["flightResultSet"][0], $this->context),
             new Flights\FlightResult($data["flightResultSet"][1], $this->context)
         );
-
         $this->assertEquals($output, $expected);
     }
 

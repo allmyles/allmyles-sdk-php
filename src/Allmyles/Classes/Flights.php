@@ -16,21 +16,28 @@ class SearchQuery
     private $preferredAirlines;
 
     public function __construct(
-        string $fromLocation,
-        string $toLocation,
+        $fromLocation,
+        $toLocation,
         $departureDate,
         $returnDate = null
     ) {
+
+        if (!(is_string($fromLocation))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be a string');
+        if (!(is_string($toLocation))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 2 must be a string');
+
         if (!(is_string($departureDate))) {
             if (is_object($departureDate)) {
-                if (!(get_class($departureDate) == '\DateTime')) throw new Exception('Fatal Error: Argument 1 must be an ISO formatted timestamp, or a DateTime object');
-            } else throw new Exception('Fatal Error: Argument 1 must be an ISO formatted timestamp, or a DateTime object');
+                if (!(get_class($departureDate) == 'DateTime')) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 3 must be an ISO formatted timestamp, or a DateTime object');
+            } else throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 3 must be an ISO formatted timestamp, or a DateTime object');
         };
-        if (!(is_string($returnDate))) {
-            if (is_object($returnDate)) {
-                if (!(get_class($returnDate) == '\DateTime')) throw new Exception('Fatal Error: Argument 1 must be an ISO formatted timestamp, or a DateTime object');
-            } else throw new Exception('Fatal Error: Argument 1 must be an ISO formatted timestamp, or a DateTime object');
+        if (isset($returnDate)) {
+            if (!(is_string($returnDate))) {
+                if (is_object($returnDate)) {
+                    if (!(get_class($returnDate) == 'DateTime')) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 4 must be an ISO formatted timestamp, or a DateTime object');
+                } else throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 4 must be an ISO formatted timestamp, or a DateTime object');
+            };
         };
+
         $this->fromLocation = $fromLocation;
         $this->toLocation = $toLocation;
         $this->departureDate = $this->getTimestamp($departureDate);
@@ -41,8 +48,10 @@ class SearchQuery
         $this->passengers = Array('ADT' => 0, 'CHD' => 0, 'INF' => 0);
     }
 
-    public function addProviderFilter(string $providerType)
+    public function addProviderFilter($providerType)
     {
+        if (!(is_string($providerType))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be a string');
+
         $this->providerType = $providerType;
     }
 
@@ -54,18 +63,22 @@ class SearchQuery
         };
         if (is_array($airlines)) {
             foreach ($airlines as $airline) {
-                if (!(is_string($airline))) throw new Exception('Fatal Error: Argument 1 must be a string, or an array of strings');
+                if (!(is_string($airline))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be a string, or an array of strings');
             };
             foreach ($airlines as $airline) {
                 if (!in_array($airline, $this->preferredAirlines)) {
                     array_push($this->preferredAirlines, $airline);
                 };
             };
-        } else throw new Exception('Fatal Error: Argument 1 must be a string, or an array of strings');
+        } else throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be a string, or an array of strings');
     }
 
-    public function addPassengers(integer $adt, integer $chd = 0, integer $inf = 0)
+    public function addPassengers($adt, $chd = 0, $inf = 0)
     {
+        if (!(is_int($adt))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be an integer');
+        if (!(is_int($chd)) and isset($chd)) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 2 must be an integer');
+        if (!(is_int($inf)) and isset($inf)) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 3 must be an integer');
+        
         $this->passengers['ADT'] += $adt;
         $this->passengers['CHD'] += $chd;
         $this->passengers['INF'] += $inf;
@@ -183,10 +196,10 @@ class Combination
             $parameters['bookingId'] = $this->bookingId;
         } else {
             if (is_object($parameters)) {
-                if (get_class($parameters) == 'BookQuery') {
+                if (get_class($parameters) == 'Allmyles\Flights\BookQuery') {
                     $parameters->setBookingId($this->bookingId);
-                } else throw new Exception('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');       
-            } else throw new Exception('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');
+                } else throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be an object of class Flights\BookQuery, or an array');       
+            } else throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be an object of class Flights\BookQuery, or an array');
         };
         $bookResponse = $this->context->client->bookFlight(
             $parameters, $this->context->session
@@ -194,8 +207,10 @@ class Combination
         return $bookResponse;
     }
 
-    public function addPayuPayment(string $payuId)
+    public function addPayuPayment($payuId)
     {
+        if (!(is_string($payuId))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be a string');
+
         $paymentResponse = $this->context->client->addPayuPayment(
             $payuId, $this->context->session
         );

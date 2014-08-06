@@ -8,3 +8,11 @@ class ServiceException extends \Exception
         parent::__construct($message, $code);
     }
 }
+
+class TypeHintException extends \Exception
+{
+    public function __construct($message)
+    {
+        parent::__construct($message);
+    }
+}

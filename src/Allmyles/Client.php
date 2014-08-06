@@ -13,8 +13,11 @@ class Client
 {
     protected $connector;
 
-    public function __construct(string $baseUrl, string $authKey)
+    public function __construct($baseUrl, $authKey)
     {
+        if (!(is_string($baseUrl))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be a string');
+        if (!(is_string($authKey))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 2 must be a string');
+
         $this->connector = new Connector\ServiceConnector($baseUrl, $authKey);
     }
 
@@ -23,19 +26,22 @@ class Client
         return $this->connector->$method($path, $context, $data);
     }
 
-    public function searchFlight($parameters, boolean $async = true, string $session = null)
+    public function searchFlight($parameters, $async = true, $session = null)
     {
         $context = new Context($this, ($session ? $session : uniqid()));
+
+        if (!(is_bool($async)) and isset($async)) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 2 must be boolean');
+        if (!(is_string($session))and isset($session)) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 3 must be a string');
 
         if (is_array($parameters)) {
             $data = json_encode($parameters);
         } else {
             if (is_object($parameters)) {
-                if (get_class($parameters) == 'Flights\SearchQuery') {
+                if (get_class($parameters) == 'Allmyles\Flights\SearchQuery') {
                     $data = json_encode($parameters->getData());
-                } else throw new Exception('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');       
-            } else throw new Exception('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');
-        }
+                } else throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');       
+            } else throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be an object of class Flights\SearchQuery, or an array');
+        };
 
         $response = $this->sendRequest('post', 'flights', $context, $data);
 
@@ -51,17 +57,29 @@ class Client
         return $response;
     }
 
-    public function getFlightDetails(string $bookingId, string $session = null) {
+    public function getFlightDetails($bookingId, $session = null)
+    {
+        if (!(is_string($bookingId))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be a string');
+        if (!(is_string($session)) and isset($session)) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 2 must be a string');
+
         $context = new Context($this, ($session ? $session : uniqid()));
 
-        $response = $this->connector->get('flights/' . $bookingId, $context);
+        $response = $this->sendRequest('get', 'flights/' . $bookingId, $context);
 
         $response->postProcessor = new Common\PostProcessor('getFlightDetails', $context);
 
         return $response;
     }
 
-    public function bookFlight(array $parameters, string $session = null) {
+    public function bookFlight($parameters, $session = null)
+    {
+        if (!(is_array($parameters))) {
+            if (is_object($parameters)) {
+                if (get_class($parameters) == 'Allmyles\Flights\BookQuery') {
+                } else throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be an object of class Flights\BookQuery, or an array');       
+            } else throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be an object of class Flights\BookQuery, or an array');
+        };
+        if (!is_string($session) and isset($session)) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 2 must be a string');
         $context = new Context($this, ($session ? $session : uniqid()));
 
         if (is_array($parameters)) {
@@ -77,7 +95,11 @@ class Client
         return $response;
     }
 
-    public function addPayuPayment(string $payuId, string $session = null) {
+    public function addPayuPayment($payuId, $session = null)
+    {
+        if (!(is_string($payuId))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be a string');
+        if (!(is_string($session)) and isset($session)) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 2 must be a string');
+
         $context = new Context($this, ($session ? $session : uniqid()));
 
         $data = json_encode(Array('payuId' => $payuId));
@@ -88,7 +110,11 @@ class Client
         return $response;
     }
 
-    public function createFlightTicket(string $bookingId, string $session = null) {
+    public function createFlightTicket($bookingId, $session = null)
+    {
+        if (!(is_string($bookingId))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be a string');
+        if (!(is_string($session)) and isset($session)) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 2 must be a string');
+
         $context = new Context($this, ($session ? $session : uniqid()));
 
         $response = $this->sendRequest('get', 'tickets/' . $bookingId, $context);
@@ -98,8 +124,11 @@ class Client
         return $response;
     }
 
-    public function searchLocations(array $parameters, string $session = null)
+    public function searchLocations($parameters, $session = null)
     {
+        if (!(is_array($parameters))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 1 must be an array');
+        if (!(is_string($session))) throw new \Allmyles\Exceptions\TypeHintException('Fatal Error: Argument 2 must be a string');
+
         $context = new Context($this, ($session ? $session : uniqid()));
         $response = $this->sendRequest('get', 'masterdata/search', $context, $parameters);
 
