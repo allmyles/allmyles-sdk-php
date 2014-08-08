@@ -5,6 +5,7 @@ require 'Connector.php';
 require 'Classes/Common.php';
 require 'Classes/Exceptions.php';
 require 'Classes/Flights.php';
+require 'Classes/Hotels.php';
 require 'Classes/Masterdata.php';
 
 define('ALLMYLES_VERSION', 'allmyles-sdk-php v1.0.3');
@@ -85,6 +86,59 @@ class Client
         $response = $this->connector->get('tickets/' . $bookingId, $context);
 
         $response->postProcessor = new Common\PostProcessor('createFlightTicket', $context);
+
+        return $response;
+    }
+
+    public function searchHotel($parameters, $session = null)
+    {
+        $context = new Context($this, ($session ? $session : uniqid()));
+
+        if (is_array($parameters)) {
+            $data = json_encode($parameters);
+        } else {
+            $data = json_encode($parameters->getData());
+        }
+
+        $response = $this->connector->post('hotels', $context, $data);
+
+        $response->postProcessor = new Common\PostProcessor('searchHotel', $context);
+
+        return $response;
+    }
+
+    public function getHotelDetails($hotelId, $session = null) {
+        $context = new Context($this, ($session ? $session : uniqid()));
+
+        $response = $this->connector->get('hotels/' . $hotelId, $context);
+
+        $response->postProcessor = new Common\PostProcessor('getHotelDetails', $context);
+
+        return $response;
+    }
+
+    public function getHotelRoomDetails($hotelId, $roomId, $session = null) {
+        $context = new Context($this, ($session ? $session : uniqid()));
+
+        $response = $this->connector->get('flights/' . $hotelId . '/' . $roomId, $context);
+
+        $response->postProcessor = new Common\PostProcessor('getHotelRoomDetails', $context);
+
+        return $response;
+    }
+
+    public function bookHotel($parameters, $session = null) {
+        $context = new Context($this, ($session ? $session : uniqid()));
+
+        if (is_array($parameters)) {
+            $data = json_encode($parameters);
+        } else {
+            $data = json_encode($parameters->getData());
+        }
+
+        $response = $this->connector->post('books', $context, $data);
+
+        $response->postProcessor = new Common\PostProcessor('bookHotel', $context);
 
         return $response;
     }

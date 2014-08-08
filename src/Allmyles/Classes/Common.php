@@ -72,25 +72,62 @@ class PostProcessor
 
     private function createFlightTicket($data, $context)
     {
-            if (array_key_exists('tickets', $data)) {
-                $results = $data['tickets'];
-            } else {
-                unset($data['flightData']);
-                $results = $data;
-            };
+        if (array_key_exists('tickets', $data)) {
+            $results = $data['tickets'];
+        } else {
+            unset($data['flightData']);
+            $results = $data;
+        };
 
-            return $results;
+        return $results;
     }
 
     private function searchLocations($data, $context)
     {
-            $results = $data['locationSearchResult'];
-            return $results;
+        $results = $data['locationSearchResult'];
+        return $results;
     }
 
     private function getMasterdata($data, $context)
     {
-            return $data;
+        return $data;
+    }
+
+    private function searchHotel($data, $context)
+    {
+        $hotels = $data['hotelResultSet'];
+
+        $result = Array();
+
+        foreach ($flights as $flight) {
+            $instance = new \Allmyles\Hotels\Hotel($hotel, $context);
+            array_push($result, $instance);
+        };
+
+        return $result;
+    }
+
+    private function getHotelDetails($data, $context)
+    {
+        $results = $data['flightDetails'];
+        $results['surcharge'] = new \Allmyles\Common\Price($results['surcharge']);
+        $results['price'] = new \Allmyles\Common\Price($results['price']);
+        unset($results['result']);
+        return $results;
+    }
+
+    private function getHotelRoomDetails($data, $context)
+    {
+        $results = $data['flightDetails'];
+        $results['surcharge'] = new \Allmyles\Common\Price($results['surcharge']);
+        $results['price'] = new \Allmyles\Common\Price($results['price']);
+        unset($results['result']);
+        return $results;
+    }
+
+    private function bookHotel($data, $context)
+    {
+        return $data;
     }
 
 }
