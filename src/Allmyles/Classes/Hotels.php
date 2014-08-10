@@ -1,6 +1,8 @@
 <?php
 namespace Allmyles\Hotels;
 
+use Allmyles\Common\Price;
+
 class SearchQuery
 {
     private $location;
@@ -21,7 +23,7 @@ class SearchQuery
             'cityCode' => $this->location,
             'arrivalDate' => $this->arrivalDate,
             'leaveDate' => $this->leaveDate,
-            'occupants' => $this->occupants
+            'occupancy' => $this->occupants
         );
 
         return $data;
@@ -37,32 +39,47 @@ class SearchQuery
     }
 }
 
-class HotelResult
+class Hotel
 {
-    public $context;
-    public $breakdown;
-    public $totalFare;
-    public $combinations;
+    public $hotelId;
+    public $hotelName;
+    public $chainName;
+    public $thumbnail;
+    public $stars;
+    public $priceRange;
+    public $location;
+    public $amenities;
 
     public function __construct($result, $context)
     {
         $this->context = &$context;
 
-        $this->breakdown = $result['breakdown'];
-        $this->totalFare = new \Allmyles\Common\Price(
-            Array(
-                'amount' => $result['total_fare'],
-                'currency' => $result['currency'],
-            )
+        $this->hotelId = $result['hotel_id'];
+        $this->hotelName = $result['hotel_name'];
+        $this->chainName = $result['chain_name'];
+        $this->thumbnailUrl = $result['thumbnail'];
+        $this->stars = $result['stars'];
+        $this->priceRange = new \Allmyles\Common\PriceRange(
+            $result['min_rate']['amount'],
+            $result['max_rate']['amount'],
+            $result['min_rate']['currency']
         );
-        $this->combinations = Array();
-        foreach ($result['combinations'] as $combination) {
-            $this->combinations[$combination['bookingId']] = new Combination($combination, $this);
-        };
+        $this->location = new \Allmyles\Common\Location(
+            $result['latitude'], $result['longitude']
+        );
+        $this->amenities = $result['amenities'];
+    }
+
+    public function getDetails()
+    {
+        $hotelDetails = $this->context->client->getHotelDetails(
+            $this->hotelId, $this->context->session
+        );
+        return $hotelDetails;
     }
 }
 
-class Combination
+class Room
 {
     public $flightResult;
     public $context;
@@ -71,40 +88,24 @@ class Combination
     public $legs;
     public $serviceFee;
 
-    public function __construct($combination, $flightResult)
+    public function __construct($room, $flightResult)
     {
         $this->flightResult = $flightResult;
         $this->context = &$this->flightResult->context;
 
-        $this->bookingId = $combination['bookingId'];
-        $this->providerType = $combination['providerType'];
-        $this->legs = Array(
-            $this->createLeg($combination, 'firstLeg'),
-            $this->createLeg($combination, 'returnLeg')
-        );
-        $this->serviceFee = new \Allmyles\Common\Price(
-            Array(
-                'amount' => $combination['serviceFeeAmount'],
-                'currency' => $this->flightResult->totalFare->currency,
-            )
-        );
+        $this->roomId = $room['booking_id'];
+        $this->price = new Price($room['price']);
+        $this->priceVaries = $room['price']['rate_varies'];
+        $this->priceScope = $room['price']['covers'];
+        $this->traits = $room['room_type'];
+        $this->bed = $room['bed_type'];
+        $this->description = $room['description'];
+        $this->quantity = $room['quantity'];
     }
 
-    private function createLeg($combination, $leg)
+    public function getDetails($parameters)
     {
-        if (!array_key_exists($leg, $combination)) {
-            return null;
-        } else {
-            return new Leg($combination[$leg], $this);
-        };
-    }
-
-    public function getDetails()
-    {
-        $flightDetails = $this->context->client->getFlightDetails(
-            $this->bookingId, $this->context->session
-        );
-        return $flightDetails;
+        return null;
     }
 
     public function book($parameters)
@@ -114,26 +115,10 @@ class Combination
         } else {
             $parameters->setBookingId($this->bookingId);
         };
-        $bookResponse = $this->context->client->bookFlight(
+        $bookResponse = $this->context->client->bookHotel(
             $parameters, $this->context->session
         );
         return $bookResponse;
-    }
-
-    public function addPayuPayment($payuId)
-    {
-        $paymentResponse = $this->context->client->addPayuPayment(
-            $payuId, $this->context->session
-        );
-        return $paymentResponse;
-    }
-
-    public function createTicket()
-    {
-        $ticketingResponse = $this->context->client->createFlightTicket(
-            $this->bookingId, $this->context->session
-        );
-        return $ticketingResponse;
     }
 }
 

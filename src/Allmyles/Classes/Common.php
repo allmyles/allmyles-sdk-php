@@ -8,8 +8,34 @@ class Price
 
     public function __construct($price)
     {
-        $this->currency = $price['currency'];
+        $this->currency = in_array('currency', $price) ? $price['currency'] : null;
         $this->amount = $price['amount'];
+    }
+}
+
+class PriceRange
+{
+    public $minimum;
+    public $maximum;
+    public $currency;
+
+    public function __construct($minimum, $maximum, $currency)
+    {
+        $this->minimum = $minimum;
+        $this->maximum = $maximum;
+        $this->currency = $currency;
+    }
+}
+
+class Location
+{
+    public $latitude;
+    public $longitude;
+
+    public function __construct($latitude, $longitude)
+    {
+        $this->latitude = $latitude;
+        $this->longitude = $longitude;
     }
 }
 
@@ -99,7 +125,7 @@ class PostProcessor
 
         $result = Array();
 
-        foreach ($flights as $flight) {
+        foreach ($hotels as $hotel) {
             $instance = new \Allmyles\Hotels\Hotel($hotel, $context);
             array_push($result, $instance);
         };
@@ -109,10 +135,17 @@ class PostProcessor
 
     private function getHotelDetails($data, $context)
     {
-        $results = $data['flightDetails'];
-        $results['surcharge'] = new \Allmyles\Common\Price($results['surcharge']);
-        $results['price'] = new \Allmyles\Common\Price($results['price']);
-        unset($results['result']);
+        $results = $data['hotel_details'];
+
+        $rooms = Array();
+
+
+        foreach ($results['rooms'] as $room) {
+            $instance = new \Allmyles\Hotels\Room($room, $context);
+            array_push($rooms, $instance);
+        };
+
+        $results['rooms'] = $rooms;
         return $results;
     }
 
