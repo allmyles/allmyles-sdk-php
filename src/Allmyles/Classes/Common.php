@@ -133,15 +133,14 @@ class PostProcessor
         return $result;
     }
 
-    private function getHotelDetails($data, $context)
+    private function getHotelDetails($data, $hotel)
     {
         $results = $data['hotel_details'];
 
         $rooms = Array();
 
-
         foreach ($results['rooms'] as $room) {
-            $instance = new \Allmyles\Hotels\Room($room, $context);
+            $instance = new \Allmyles\Hotels\Room($room, $hotel);
             array_push($rooms, $instance);
         };
 
@@ -151,10 +150,7 @@ class PostProcessor
 
     private function getHotelRoomDetails($data, $context)
     {
-        $results = $data['flightDetails'];
-        $results['surcharge'] = new \Allmyles\Common\Price($results['surcharge']);
-        $results['price'] = new \Allmyles\Common\Price($results['price']);
-        unset($results['result']);
+        $results = $data['hotel_room_details'];
         return $results;
     }
 

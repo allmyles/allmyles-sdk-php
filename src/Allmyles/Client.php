@@ -107,22 +107,20 @@ class Client
         return $response;
     }
 
-    public function getHotelDetails($hotelId, $session = null) {
-        $context = new Context($this, ($session ? $session : uniqid()));
+    public function getHotelDetails($hotel) {
+        $response = $this->connector->get('hotels/' . $hotel->hotelId, $hotel->context);
 
-        $response = $this->connector->get('hotels/' . $hotelId, $context);
-
-        $response->postProcessor = new Common\PostProcessor('getHotelDetails', $context);
+        $response->postProcessor = new Common\PostProcessor('getHotelDetails', $hotel);
 
         return $response;
     }
 
-    public function getHotelRoomDetails($hotelId, $roomId, $session = null) {
-        $context = new Context($this, ($session ? $session : uniqid()));
+    public function getHotelRoomDetails($room) {
+        $response = $this->connector->get(
+            'hotels/' . $room->hotel->hotelId . '/rooms/' . $room->roomId, $room->context
+        );
 
-        $response = $this->connector->get('flights/' . $hotelId . '/' . $roomId, $context);
-
-        $response->postProcessor = new Common\PostProcessor('getHotelRoomDetails', $context);
+        $response->postProcessor = new Common\PostProcessor('getHotelRoomDetails', $room->context);
 
         return $response;
     }

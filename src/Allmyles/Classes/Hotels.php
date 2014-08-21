@@ -44,7 +44,7 @@ class Hotel
     public $hotelId;
     public $hotelName;
     public $chainName;
-    public $thumbnail;
+    public $thumbnailUrl;
     public $stars;
     public $priceRange;
     public $location;
@@ -72,28 +72,32 @@ class Hotel
 
     public function getDetails()
     {
-        $hotelDetails = $this->context->client->getHotelDetails(
-            $this->hotelId, $this->context->session
-        );
-        return $hotelDetails;
+        return $this->context->client->getHotelDetails($this);
     }
 }
 
 class Room
 {
-    public $flightResult;
     public $context;
+    public $hotel;
+
+    public $roomId;
     public $bookingId;
-    public $providerType;
-    public $legs;
-    public $serviceFee;
+    public $price;
+    public $priceVaries;
+    public $priceScope;
+    public $traits;
+    public $bed;
+    public $description;
+    public $quantity;
 
-    public function __construct($room, $flightResult)
+    public function __construct($room, $hotel)
     {
-        $this->flightResult = $flightResult;
-        $this->context = &$this->flightResult->context;
+        $this->context = &$hotel->context;
+        $this->hotel = &$hotel;
 
-        $this->roomId = $room['booking_id'];
+        $this->roomId = $room['room_id'];
+        $this->bookingId = $room['booking_id'];
         $this->price = new Price($room['price']);
         $this->priceVaries = $room['price']['rate_varies'];
         $this->priceScope = $room['price']['covers'];
@@ -103,9 +107,9 @@ class Room
         $this->quantity = $room['quantity'];
     }
 
-    public function getDetails($parameters)
+    public function getDetails()
     {
-        return null;
+        return $this->context->client->getHotelRoomDetails($this);
     }
 
     public function book($parameters)
@@ -126,14 +130,14 @@ class Room
 class BookQuery
 {
     private $bookingId;
-    private $passengers;
+    private $occupants;
     private $billingInfo;
     private $contactInfo;
 
-    public function __construct($passengers = null, $contactInfo = null, $billingInfo = null)
+    public function __construct($occupants = null, $contactInfo = null, $billingInfo = null)
     {
-        if ($passengers != null) {
-            $this->addPassengers($passengers);
+        if ($occupants != null) {
+            $this->addOccupants($occupants);
         };
         if ($contactInfo != null) {
             $this->addContactInfo($contactInfo);
@@ -148,36 +152,36 @@ class BookQuery
         $this->bookingId = $bookingId;
     }
 
-    public function addPassengers($passengers)
+    public function addOccupants($occupants)
     {
-        if ($this->passengers == null) {
-          $this->passengers = array();
+        if ($this->occupants == null) {
+          $this->occupants = array();
         };
 
-        foreach (array_values($passengers) as $value) {
+        foreach (array_values($occupants) as $value) {
             // Check if all items in $passengers are arrays. If not, then we
             // got a single passenger only, and need to wrap it in an array.
             if (!is_array($value)) {
-                $passengers = Array($passengers);
+                $occupants = Array($occupants);
                 break;
             }
         }
 
-        foreach ($passengers as $passenger) {
-            $passenger['baggage'] = 0;
-            switch (strtolower($passenger['namePrefix'])) {
+        foreach ($occupants as $occupant) {
+            $occupant['baggage'] = 0;
+            switch (strtolower($occupant['namePrefix'])) {
                 case 'mr':
-                    $passenger['gender'] = 'MALE';
+                    $occupant['gender'] = 'MALE';
                     break;
                 case 'ms':
-                    $passenger['gender'] = 'FEMALE';
+                    $occupant['gender'] = 'FEMALE';
                     break;
                 case 'mrs':
-                    $passenger['gender'] = 'FEMALE';
+                    $occupant['gender'] = 'FEMALE';
                     break;
             }
 
-            array_push($this->passengers, $passenger);
+            array_push($this->occupants, $occupant);
         };
     }
 
@@ -194,10 +198,10 @@ class BookQuery
     public function getData()
     {
         $data = Array();
-        $data['passengers'] = $this->passengers;
+        $data['persons'] = $this->occupants;
         $data['billingInfo'] = $this->billingInfo;
         $data['contactInfo'] = $this->contactInfo;
-        $data['bookingId'] = $this->bookingId;
+        $data['bookBasket'] = Array($this->bookingId);
         return $data;
     }
 }
