@@ -9,12 +9,14 @@ class SearchQuery
     private $arrivalDate;
     private $leaveDate;
     private $occupants;
+    private $filters;
 
     public function __construct($location, $arrivalDate, $leaveDate, $occupants = 1) {
         $this->location = $location;
         $this->arrivalDate = $this->getTimestamp($arrivalDate);
         $this->leaveDate = $this->getTimestamp($leaveDate);
         $this->occupants = $occupants;
+        $this->filters = new \ArrayObject();
     }
 
     public function getData()
@@ -23,10 +25,41 @@ class SearchQuery
             'cityCode' => $this->location,
             'arrivalDate' => $this->arrivalDate,
             'leaveDate' => $this->leaveDate,
-            'occupancy' => $this->occupants
+            'occupancy' => $this->occupants,
+            'filters' => $this->filters
         );
 
         return $data;
+    }
+
+    public function addHotelCodeFilter($hotelCode)
+    {
+        $this->filters['hotel_code'] = $hotelCode;
+    }
+
+    public function addHotelNameFilter($hotelName)
+    {
+        $this->filters['hotel_name'] = $hotelName;
+    }
+
+    public function addChainCodeFilter($chainCode)
+    {
+        $this->filters['chain_code'] = $chainCode;
+    }
+
+    public function addChainNameFilter($chainName)
+    {
+        $this->filters['chain_name'] = $chainName;
+    }
+
+    public function addBrandCodeFilter($brandCode)
+    {
+        $this->filters['brand_code'] = $brandCode;
+    }
+
+    public function addBrandNameFilter($brandName)
+    {
+        $this->filters['brand_name'] = $brandName;
     }
 
     private function getTimestamp($datetime)

@@ -156,7 +156,7 @@ class PostProcessor
 
     private function bookHotel($data, $context)
     {
-        return $data;
+        return $data['success'];
     }
 
 }
