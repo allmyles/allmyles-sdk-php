@@ -1,7 +1,9 @@
 <?php
 namespace Allmyles\Hotels;
 
+use Allmyles\Common\Location;
 use Allmyles\Common\Price;
+use Allmyles\Common\PriceRange;
 
 class SearchQuery
 {
@@ -68,7 +70,7 @@ class SearchQuery
             return $datetime;
         } else {
             return $datetime->format('Y-m-d');
-        };
+        }
     }
 }
 
@@ -92,12 +94,12 @@ class Hotel
         $this->chainName = $result['chain_name'];
         $this->thumbnailUrl = $result['thumbnail'];
         $this->stars = $result['stars'];
-        $this->priceRange = new \Allmyles\Common\PriceRange(
+        $this->priceRange = new PriceRange(
             $result['min_rate']['amount'],
             $result['max_rate']['amount'],
             $result['min_rate']['currency']
         );
-        $this->location = new \Allmyles\Common\Location(
+        $this->location = new Location(
             $result['latitude'], $result['longitude']
         );
         $this->amenities = $result['amenities'];

@@ -1,6 +1,8 @@
 <?php
 namespace Allmyles\Flights;
 
+use Allmyles\Common\Price;
+
 class SearchQuery
 {
     const PROVIDER_ALL = 'All';
@@ -89,7 +91,7 @@ class SearchQuery
             return $datetime;
         } else {
             return $datetime->format('c');
-        };
+        }
     }
 }
 
@@ -105,7 +107,7 @@ class FlightResult
         $this->context = &$context;
 
         $this->breakdown = $result['breakdown'];
-        $this->totalFare = new \Allmyles\Common\Price(
+        $this->totalFare = new Price(
             Array(
                 'amount' => $result['total_fare'],
                 'currency' => $result['currency'],
@@ -138,7 +140,7 @@ class Combination
             $this->createLeg($combination, 'firstLeg'),
             $this->createLeg($combination, 'returnLeg')
         );
-        $this->serviceFee = new \Allmyles\Common\Price(
+        $this->serviceFee = new Price(
             Array(
                 'amount' => $combination['serviceFeeAmount'],
                 'currency' => $this->flightResult->totalFare->currency,
@@ -152,7 +154,7 @@ class Combination
             return null;
         } else {
             return new Leg($combination[$leg], $this);
-        };
+        }
     }
 
     public function getDetails()

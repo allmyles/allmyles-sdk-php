@@ -1,6 +1,10 @@
 <?php
 namespace Allmyles\Common;
 
+use Allmyles\Flights\FlightResult;
+use Allmyles\Hotels\Hotel;
+use Allmyles\Hotels\Room;
+
 class Price
 {
     public $currency;
@@ -8,7 +12,7 @@ class Price
 
     public function __construct($price)
     {
-        $this->currency = in_array('currency', $price) ? $price['currency'] : null;
+        $this->currency = array_key_exists('currency', $price) ? $price['currency'] : null;
         $this->amount = $price['amount'];
     }
 }
@@ -62,7 +66,7 @@ class PostProcessor
         $result = Array();
 
         foreach ($flights as $flight) {
-            $instance = new \Allmyles\Flights\FlightResult($flight, $context);
+            $instance = new FlightResult($flight, $context);
             array_push($result, $instance);
         };
 
@@ -72,8 +76,8 @@ class PostProcessor
     private function getFlightDetails($data, $context)
     {
         $results = $data['flightDetails'];
-        $results['surcharge'] = new \Allmyles\Common\Price($results['surcharge']);
-        $results['price'] = new \Allmyles\Common\Price($results['price']);
+        $results['surcharge'] = new Price($results['surcharge']);
+        $results['price'] = new Price($results['price']);
         unset($results['result']);
         return $results;
     }
@@ -85,7 +89,7 @@ class PostProcessor
             return true;
         } else {
             return $data;
-        };
+        }
     }
 
     private function addPayuPayment($data, $context)
@@ -93,7 +97,9 @@ class PostProcessor
         // We are expecting no content
         if ($data == null) {
             return true;
-        };
+        } else {
+            return null;
+        }
     }
 
     private function createFlightTicket($data, $context)
@@ -126,7 +132,7 @@ class PostProcessor
         $result = Array();
 
         foreach ($hotels as $hotel) {
-            $instance = new \Allmyles\Hotels\Hotel($hotel, $context);
+            $instance = new Hotel($hotel, $context);
             array_push($result, $instance);
         };
 
@@ -140,7 +146,7 @@ class PostProcessor
         $rooms = Array();
 
         foreach ($results['rooms'] as $room) {
-            $instance = new \Allmyles\Hotels\Room($room, $hotel);
+            $instance = new Room($room, $hotel);
             array_push($rooms, $instance);
         };
 

@@ -1,13 +1,12 @@
 <?php
 namespace Allmyles\Curl;
 
-use stdClass;
+use Allmyles\Exceptions\ServiceException;
 use Exception;
 
 class Request
 {
     private $allmylesRequest;
-    private $allmylesResponse;
 
     public $args;
 
@@ -97,7 +96,7 @@ class Request
 
     private function close()
     {
-        return curl_close($this->allmylesRequest);
+        curl_close($this->allmylesRequest);
     }
 }
 
@@ -136,7 +135,7 @@ class Response
 
         $this->statusCode = $this->request->getInfo(CURLINFO_HTTP_CODE);
 
-        $responses = array(
+        $responses = Array(
             100 => 'Continue',
             101 => 'Switching Protocols',
             200 => 'OK',
@@ -213,7 +212,7 @@ class Response
     public function get()
     {
         if (isset($this->error)) {
-            throw new \Allmyles\Exceptions\ServiceException($this->error, $this->statusCode);
+            throw new ServiceException($this->error, $this->statusCode);
         };
 
         if (is_string($this->data)) {
@@ -224,7 +223,9 @@ class Response
 
         if (!$this->incomplete) {
             return $this->postProcessor->process($data);
-        };
+        } else {
+            return null;
+        }
     }
 
     public function saveState()

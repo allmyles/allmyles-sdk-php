@@ -1,6 +1,8 @@
 <?php
 namespace Allmyles\Connector;
 
+use Allmyles\Curl\Curl;
+
 require 'Curl.php';
 
 class ServiceConnector
@@ -10,7 +12,7 @@ class ServiceConnector
 
     public function __construct($baseUrl, $authKey)
     {
-        $this->curl = new \Allmyles\Curl\Curl($baseUrl);
+        $this->curl = new Curl($baseUrl);
         $this->authKey = $authKey;
     }
 
