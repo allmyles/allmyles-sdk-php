@@ -1,6 +1,7 @@
 <?php
 namespace Allmyles\Common;
 
+use Allmyles\Cars\Car;
 use Allmyles\Flights\FlightResult;
 use Allmyles\Hotels\Hotel;
 use Allmyles\Hotels\Room;
@@ -165,9 +166,27 @@ class PostProcessor
         return $data['success'];
     }
 
-    private function getMasterdata($data, $context)
+    private function searchCar($data, $context)
     {
-            return $data;
+        $cars = $data['car_results'];
+
+        $result = Array();
+
+        foreach ($cars as $car) {
+            $instance = new Car($car, $context);
+            array_push($result, $instance);
+        };
+
+        return $result;
     }
 
+    private function getCarDetails($data, $context)
+    {
+        return $data['car_details'];
+    }
+
+    private function bookCar($data, $context)
+    {
+        return $data;
+    }
 }
