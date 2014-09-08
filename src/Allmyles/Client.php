@@ -73,10 +73,7 @@ class Client
     public function addPayuPayment($parameters, $session = null) {
         $context = new Context($this, ($session ? $session : uniqid()));
 
-        $data = json_encode(Array(
-            'payuId' => $parameters['payuId'],
-            'basket' => Array($parameters['bookingId'])
-        ));
+        $data = json_encode($parameters);
         $response = $this->connector->post('payment', $context, $data);
 
         $response->postProcessor = new Common\PostProcessor('addPayuPayment', $context);

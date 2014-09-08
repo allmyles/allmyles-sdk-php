@@ -88,7 +88,7 @@ class Car
     public function addPayuPayment($payuId)
     {
         $paymentResponse = $this->context->client->addPayuPayment(
-            Array('payuId' => $payuId, 'bookingId' => $this->vehicleId), $this->context->session
+            Array('payuId' => $payuId, 'basket' => Array($this->vehicleId)), $this->context->session
         );
         return $paymentResponse;
     }
