@@ -1,7 +1,5 @@
 <?php
 
-$allmyles = new Allmyles\Client('http://localhost:8084/v2.0', 'allmyles-test');
-
 $timezone = new DateTimeZone('UTC');
 $search_query = new Allmyles\Flights\SearchQuery(
     'BUD', 'LON', new DateTime('+30 days', $timezone), new DateTime('+40 days', $timezone)
