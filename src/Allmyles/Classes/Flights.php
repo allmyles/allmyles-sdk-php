@@ -224,7 +224,11 @@ class Segment
     public $arrival;
     public $departure;
     public $airline;
+    public $airlineName;
+    public $operatingAirline;
+    public $operatingAirlineName;
     public $flightNumber;
+    public $aircraft;
     public $availableSeats;
     public $cabin;
 
@@ -235,8 +239,12 @@ class Segment
 
         $this->arrival = new Stop($segment['arrival'], $this);
         $this->departure = new Stop($segment['departure'], $this);
-        $this->airline = $segment['operatingAirline'];
+        $this->airline = $segment['marketingAirline'];
+        $this->airlineName = $segment['marketingAirlineName'];
+        $this->operatingAirline = $segment['operatingAirline'];
+        $this->operatingAirlineName = $segment['operatingAirlineName'];
         $this->flightNumber = $segment['flightNumber'];
+        $this->aircraft = $segment['aircraft'];
         $this->availableSeats = $segment['availableSeats'];
         $this->cabin = $segment['cabin'];
     }
@@ -248,6 +256,7 @@ class Stop
     public $context;
     public $time;
     public $airport;
+    public $airportName;
     public $terminal;
 
     public function __construct($stop, $segment)
@@ -257,6 +266,7 @@ class Stop
 
         $this->time = date_create($stop['dateTime'], new \DateTimeZone('UTC'));
         $this->airport = $stop['airport']['code'];
+        $this->airportName = $stop['airport']['name'];
         $this->terminal = $stop['airport']['terminal'];
     }
 }
