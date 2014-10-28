@@ -181,7 +181,7 @@ class Combination
     public function addPayuPayment($payuId)
     {
         $paymentResponse = $this->context->client->addPayuPayment(
-            $payuId, $this->context->session
+            Array('payuId' => $payuId, 'basket' => Array($this->bookingId)), $this->context->session
         );
         return $paymentResponse;
     }

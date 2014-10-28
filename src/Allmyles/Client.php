@@ -2,6 +2,7 @@
 namespace Allmyles;
 
 require 'Connector.php';
+require 'Classes/Cars.php';
 require 'Classes/Common.php';
 require 'Classes/Exceptions.php';
 require 'Classes/Flights.php';
@@ -69,10 +70,10 @@ class Client
         return $response;
     }
 
-    public function addPayuPayment($payuId, $session = null) {
+    public function addPayuPayment($parameters, $session = null) {
         $context = new Context($this, ($session ? $session : uniqid()));
 
-        $data = json_encode(Array('payuId' => $payuId));
+        $data = json_encode($parameters);
         $response = $this->connector->post('payment', $context, $data);
 
         $response->postProcessor = new Common\PostProcessor('addPayuPayment', $context);
@@ -137,6 +138,51 @@ class Client
         $response = $this->connector->post('books', $context, $data);
 
         $response->postProcessor = new Common\PostProcessor('bookHotel', $context);
+
+        return $response;
+    }
+
+    public function searchCar($parameters, $session = null)
+    {
+        $context = new Context($this, ($session ? $session : uniqid()));
+
+        if (is_array($parameters)) {
+            $data = json_encode($parameters);
+        } else {
+            $data = json_encode($parameters->getData());
+        }
+
+        $response = $this->connector->post('cars', $context, $data);
+
+        $response->postProcessor = new Common\PostProcessor('searchCar', $context);
+
+        return $response;
+    }
+
+    public function getCarDetails($bookingId, $session = null)
+    {
+        $context = new Context($this, ($session ? $session : uniqid()));
+
+        $response = $this->connector->get('cars/' . $bookingId, $context);
+
+        $response->postProcessor = new Common\PostProcessor('getCarDetails', $context);
+
+        return $response;
+    }
+
+    public function bookCar($parameters, $session = null)
+    {
+        $context = new Context($this, ($session ? $session : uniqid()));
+
+        if (is_array($parameters)) {
+            $data = json_encode($parameters);
+        } else {
+            $data = json_encode($parameters->getData());
+        }
+
+        $response = $this->connector->post('books', $context, $data);
+
+        $response->postProcessor = new Common\PostProcessor('bookCar', $context);
 
         return $response;
     }
