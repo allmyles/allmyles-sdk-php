@@ -2,6 +2,7 @@
 namespace Allmyles\Common;
 
 use Allmyles\Cars\Car;
+use Allmyles\Context;
 use Allmyles\Flights\FlightResult;
 use Allmyles\Hotels\Hotel;
 use Allmyles\Hotels\Room;
@@ -49,15 +50,25 @@ class PostProcessor
     private $methodName;
     private $context;
 
-    public function __construct($methodName, &$context)
+    public function __construct($methodName = null, Context &$context = null)
     {
-        $this->methodName = $methodName;
-        $this->context = $context;
+        if isset($methodName) {
+            $this->methodName = $methodName;
+            $this->context = $context;
+        } else {
+            $this->methodName = null;
+            $this->context = null;
+        }
     }
 
     public function process($data)
     {
-        return $this->{$this->methodName}($data, $this->context);
+        if isset($this->methodName) {
+            return $this->{$this->methodName}($data, $this->context);
+        } else {
+            return $data;
+        }
+
     }
 
     private function searchFlight($data, $context)
@@ -121,11 +132,6 @@ class PostProcessor
         return $results;
     }
 
-    private function getMasterdata($data, $context)
-    {
-        return $data;
-    }
-
     private function searchHotel($data, $context)
     {
         $hotels = $data['hotelResultSet'];
@@ -183,10 +189,5 @@ class PostProcessor
     private function getCarDetails($data, $context)
     {
         return $data['car_details'];
-    }
-
-    private function bookCar($data, $context)
-    {
-        return $data;
     }
 }
