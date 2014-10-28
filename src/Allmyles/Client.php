@@ -182,8 +182,6 @@ class Client
 
         $response = $this->connector->post('books', $context, $data);
 
-        $response->postProcessor = new Common\PostProcessor('bookCar', $context);
-
         return $response;
     }
 
@@ -201,8 +199,6 @@ class Client
     {
         $context = new Context($this, ($session ? $session : uniqid()));
         $response = $this->connector->get('masterdata/' . $repo, $context, $parameters);
-
-        $response->postProcessor = new Common\PostProcessor('getMasterdata', $context);
 
         return $response;
     }
