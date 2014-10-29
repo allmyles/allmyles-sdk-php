@@ -85,7 +85,7 @@ class SearchQuery
         return $data;
     }
 
-    private function getTimestamp($datetime)
+    private function getTimestamp(\DateTime $datetime)
     {
         if (is_string($datetime) || $datetime == null) {
             return $datetime;
@@ -255,6 +255,8 @@ class Stop
     public $segment;
     public $context;
     public $time;
+    public $city;
+    public $cityName;
     public $airport;
     public $airportName;
     public $terminal;
@@ -265,6 +267,8 @@ class Stop
         $this->context = &$this->segment->context;
 
         $this->time = date_create($stop['dateTime'], new \DateTimeZone('UTC'));
+        $this->city = $stop['city']['code'];
+        $this->cityName = $stop['city']['name'];
         $this->airport = $stop['airport']['code'];
         $this->airportName = $stop['airport']['name'];
         $this->terminal = $stop['airport']['terminal'];
