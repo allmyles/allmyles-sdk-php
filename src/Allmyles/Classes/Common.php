@@ -52,7 +52,7 @@ class PostProcessor
 
     public function __construct($methodName = null, Context &$context = null)
     {
-        if isset($methodName) {
+        if (isset($methodName)) {
             $this->methodName = $methodName;
             $this->context = $context;
         } else {
@@ -63,7 +63,7 @@ class PostProcessor
 
     public function process($data)
     {
-        if isset($this->methodName) {
+        if (isset($this->methodName)) {
             return $this->{$this->methodName}($data, $this->context);
         } else {
             return $data;
