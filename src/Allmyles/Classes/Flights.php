@@ -85,7 +85,7 @@ class SearchQuery
         return $data;
     }
 
-    private function getTimestamp(\DateTime $datetime)
+    private function getTimestamp($datetime)
     {
         if (is_string($datetime) || $datetime == null) {
             return $datetime;
