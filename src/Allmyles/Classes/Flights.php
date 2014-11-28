@@ -128,6 +128,7 @@ class Combination
     public $providerType;
     public $legs;
     public $serviceFee;
+    public $comfortScore;
 
     public function __construct($combination, $flightResult)
     {
@@ -146,6 +147,7 @@ class Combination
                 'currency' => $this->flightResult->totalFare->currency,
             )
         );
+        $this->comfortScore = $combination['comfortScore'];
     }
 
     private function createLeg($combination, $leg)
