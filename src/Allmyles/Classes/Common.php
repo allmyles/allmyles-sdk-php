@@ -50,7 +50,7 @@ class PostProcessor
     private $methodName;
     private $context;
 
-    public function __construct($methodName = null, Context &$context = null)
+    public function __construct($methodName = null, &$context = null)
     {
         if (isset($methodName)) {
             $this->methodName = $methodName;
