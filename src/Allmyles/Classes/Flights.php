@@ -349,8 +349,8 @@ class BookQuery
     {
         $data = Array();
         $data['passengers'] = $this->passengers;
-        $data['billingInfo'] = $this->billingInfo;
         $data['contactInfo'] = $this->contactInfo;
+        $data['billingInfo'] = array_key_exists('billingInfo', $data) ? $this->billingInfo : $this->contactInfo;
         $data['bookingId'] = $this->bookingId;
         return $data;
     }
