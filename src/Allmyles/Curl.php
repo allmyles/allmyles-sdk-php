@@ -137,7 +137,7 @@ class Response
 
     public function get()
     {
-        if (!($this->statusCode < 400)) {
+        if (!($this->statusCode < 300)) {
             throw new ServiceException($this->data, $this->statusCode);
         };
 
