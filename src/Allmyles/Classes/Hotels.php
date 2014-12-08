@@ -179,6 +179,15 @@ class Room
         );
         return $bookResponse;
     }
+
+    public function addPayuPayment($payuId)
+    {
+        $paymentResponse = $this->context->client->addPayuPayment(
+            Array('payuId' => $payuId, 'basket' => Array($this->bookingId)), $this->context->session
+        );
+        return $paymentResponse;
+    }
+
 }
 
 
