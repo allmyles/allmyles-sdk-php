@@ -125,6 +125,9 @@ class Room
     public $bed;
     public $description;
     public $quantity;
+    public $rules;
+    public $charge;
+    public $includes;
 
     public function __construct($room, $hotel)
     {
@@ -133,18 +136,35 @@ class Room
 
         $this->roomId = $room['room_id'];
         $this->bookingId = $room['booking_id'];
-        $this->price = new Price($room['price']);
+        $this->price = new Price(Array('amount' => $room['price'], 'currency' => $this->hotel->priceRange->currency));
         $this->priceVaries = $room['price']['rate_varies'];
         $this->priceScope = $room['price']['covers'];
         $this->traits = $room['room_type'];
         $this->bed = $room['bed_type'];
         $this->description = $room['description'];
         $this->quantity = $room['quantity'];
+
+        // to be populated after getDetails() is called
+        $this->rules = Array(
+            'cancellation' => null,
+            'needs_deposit' => null,
+            'needs_guarantee' => null,
+            'notes' => null,
+        );
+        $this->charge = null;
+        $this->includes = Array();
     }
 
     public function getDetails()
     {
-        return $this->context->client->getHotelRoomDetails($this);
+        $details = $this->context->client->getHotelRoomDetails($this)->get();
+        $this->rules = $details['rules'];
+        $this->price->amount = $details['price']['total'];
+        $this->includes = $details['includes'];
+        $this->charge = new Price(
+            Array('amount' => $details['price']['charge'], 'currency' => $this->price->currency)
+        );
+        return $this;
     }
 
     public function book($parameters)
