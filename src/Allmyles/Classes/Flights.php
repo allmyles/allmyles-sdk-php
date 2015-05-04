@@ -348,10 +348,10 @@ class BookQuery
     public function getData()
     {
         $data = Array();
-        $data['passengers'] = $this->passengers;
+        $data['persons'] = $this->passengers;
         $data['contactInfo'] = $this->contactInfo;
         $data['billingInfo'] = array_key_exists('billingInfo', $data) ? $this->billingInfo : $this->contactInfo;
-        $data['bookingId'] = $this->bookingId;
+        $data['bookBasket'] = array($this->bookingId);
         return $data;
     }
 }
