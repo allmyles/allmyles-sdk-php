@@ -198,7 +198,7 @@ class Client
     public function retrieveMasterdata($repo, $session = null)
     {
         $context = new Context($this, ($session ? $session : uniqid()));
-        $response = $this->connector->get('masterdata/' . $repo, $context, $parameters);
+        $response = $this->connector->get('masterdata/' . $repo, $context, array());
 
         return $response;
     }
