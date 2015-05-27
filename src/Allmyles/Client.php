@@ -9,7 +9,7 @@ require 'Classes/Flights.php';
 require 'Classes/Hotels.php';
 require 'Classes/Masterdata.php';
 
-define('ALLMYLES_VERSION', 'allmyles-sdk-php v1.0.3');
+define('ALLMYLES_VERSION', 'allmyles-sdk-php v1.1.0');
 
 class Client
 {
