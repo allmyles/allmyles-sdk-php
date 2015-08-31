@@ -152,7 +152,7 @@ class Combination
 
     private function createLeg($combination, $leg)
     {
-        if (!array_key_exists($leg, $combination)) {
+        if (!$combination[$leg]) {
             return null;
         } else {
             return new Leg($combination[$leg], $this);
