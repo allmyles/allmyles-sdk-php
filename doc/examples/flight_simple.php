@@ -39,7 +39,7 @@ try {
   $flight->book($book_query)->get();
 
   // payment
-  $flight->addPayuPayment('1234')->get();
+  $flight->addPaymentID('1234')->get();
 
   // ticketing
   var_dump($flight->createTicket()->get());
